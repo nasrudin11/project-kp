@@ -1,0 +1,161 @@
+/* Styles for the sidebar */
+.sidebar {
+  width: 200px; /* Initial width */
+  height: 100vh; 
+  transition: width 0.5s ease, background-color 0.3s ease; /* Smooth transition */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar.sidebar-collapsed {
+  width: 80px; /* Width when collapsed */
+}
+
+/* Other styles remain the same */
+.sidebar .logo {
+  width: 40px; /* Default size */
+  height: 40px; /* Default size */
+  transition: width 0.3s ease, height 0.3s ease; /* Smooth transition */
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+      width: 60%; /* Adjust width */
+      position: -webkit-sticky;
+      position: sticky;
+      transition: width 0.5s ease; /* Smooth transition */
+  }
+
+  .sidebar.sidebar-collapsed {
+      width: 80px; /* Adjust collapsed width */
+  }
+
+  .sidebar .logo {
+      width: 30px; /* Reduced size for smaller screens */
+      height: 30px; /* Maintain aspect ratio */
+      transition: width 0.3s ease, height 0.3s ease; /* Smooth transition */
+  }
+
+  .sidebar .nav-link span {
+      display: none; /* Hide text */
+  }
+
+  .sidebar .dropdown-toggle strong {
+      display: none; /* Hide user name */
+  }
+
+  /* Button Styling */
+  #sidebarToggle {
+      padding: 8px 10px; /* Smaller padding */
+      font-size: 14px; /* Smaller font size */
+      transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  }
+}
+
+/* Button Styling (non-responsive) */
+#sidebarToggle {
+  background-color: #007bff; /* Primary color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 15px; /* Padding */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  cursor: pointer; /* Pointer on hover */
+}
+
+#sidebarToggle:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+#sidebarToggle:focus {
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+.nav-link{
+  color: black;
+}
+
+.nav-link.active-custom {
+  position: relative;
+  color: #007bff; /* Change active text color */
+  font-weight: bold;
+}
+
+
+.nav-link.active-custom::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px; /* Height of the active bar */
+  background-color: #007bff; /* Color of the active bar */
+  transform: scaleX(1);
+}
+
+.custom-hover {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.custom-hover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px; /* Change height as needed */
+  background-color: #007bff; /* Change color as needed */
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.custom-hover:hover {
+  color: #007bff; /* Change text color on hover */
+}
+
+.custom-hover:hover::after {
+  transform: scaleX(1);
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease; /* Smooth opacity transition */
+}
+
+.sidebar .nav-link i {
+  margin-right: 10px;
+}
+
+.sidebar.sidebar-collapsed .nav-link i {
+  margin-right: 0;
+}
+
+.sidebar .nav-link span {
+  display: inline;
+}
+
+.sidebar.sidebar-collapsed .nav-link span {
+  display: none;
+}
+
+.sidebar .dropdown-toggle strong {
+  display: inline;
+}
+
+.sidebar.sidebar-collapsed .dropdown-toggle strong {
+  display: none;
+}
+
+.sidebar .logo-text {
+  display: inline;
+  margin-left: 10px;
+}
+
+.sidebar.sidebar-collapsed .logo-text {
+  display: none;
+}

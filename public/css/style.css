@@ -1,0 +1,42 @@
+body{
+  /* background-color: #2196f3; */
+  background-color: #607d8b;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-registration input{
+  border-radius: 0;
+  margin-bottom: -1px;
+}
+
+/* Untuk ukuran mobile */
+@media (max-width: 576px) {
+  .logo-img {
+      width: 50px;
+      height: 50px;
+  }
+}
+
+/* Untuk ukuran desktop */
+@media (min-width: 577px) {
+  .logo-img {
+      width: 72px;
+      height: 72px;
+  }
+}
+
