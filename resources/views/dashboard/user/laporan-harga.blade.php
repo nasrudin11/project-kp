@@ -66,7 +66,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
 
+        <div class="card shadow mt-3 border-0">
             <div class="card-body">
                 <h4 class="text-center">Data Harga Pasokan Pangan <br> Tingkat Pedagang Grosir Pasar Modo</h4>
 

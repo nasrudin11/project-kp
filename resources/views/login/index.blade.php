@@ -47,7 +47,7 @@
                             @enderror
                         </div>
                         <div class="form-floating">
-                            <input type="password" class="form-control rounded-bottom" id="floatingPassword" name="password" placeholder="Password">
+                            <input type="password" class="form-control rounded-bottom" id="floatingPassword" name="password" placeholder="Password" autofocus required>
                             <label for="floatingPassword">Password</label>
                         </div>
                         <button class="btn btn-primary w-100 py-2 mt-4" type="submit">Log in</button>

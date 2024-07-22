@@ -29,6 +29,11 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
+        // $credentials = $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required'
+        // ]);
+
         // Cek kredensial
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();

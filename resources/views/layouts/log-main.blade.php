@@ -11,7 +11,7 @@
     <!-- Link Icon Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="css/sidebars.css">
+    <link rel="stylesheet" href="../css/sidebars.css">
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
 
@@ -25,13 +25,6 @@
 
         @yield('content')
     </div>
-
-
-    <script>
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-          document.getElementById('sidebar').classList.toggle('sidebar-collapsed');
-        });
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
