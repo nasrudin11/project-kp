@@ -20,9 +20,16 @@
         </li>
 
         <li>
-            <a href="/admin-dashboard/akun-user" class="nav-link nav-link-hover {{ $title == 'Akun User' ? 'active' : '' }}" aria-current="page">
+            <a href="/admin-dashboard/akun-user" class="nav-link nav-link-hover {{ $title == 'Data Akun User' ? 'active' : '' }}" aria-current="page">
                 <i class="bi bi-layout-text-window-reverse"></i>
-                <span>Akun User</span>
+                <span>Data Akun</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="/admin-dashboard/data-lokasi" class="nav-link nav-link-hover {{ $title == 'Data Logasi' ? 'active' : '' }}" aria-current="page">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Data Lokasi</span>
             </a>
         </li>
 

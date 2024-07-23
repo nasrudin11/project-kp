@@ -29,8 +29,6 @@
                         </script>
                     @endif
 
-
-
                     <form action="/login" method="post">
                         @csrf
                         <div class="text-center">

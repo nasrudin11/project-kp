@@ -18,6 +18,7 @@ class LoginController extends Controller
     {
         $key = 'login.' . $request->ip();
         
+        // Cek rate limiter
         if (RateLimiter::tooManyAttempts($key, 2)) {
             $retryAfter = RateLimiter::availableIn($key);
             return back()->with('retryAfter', $retryAfter);
@@ -29,14 +30,13 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        // $credentials = $request->validate([
-        //     'email' => 'required|email',
-        //     'password' => 'required'
-        // ]);
-
         // Cek kredensial
         if (Auth::attempt($credentials)) {
+            // Regenerasi sesi
             $request->session()->regenerate();
+
+            // Reset hitungan rate limiter setelah login berhasil
+            RateLimiter::clear($key);
 
             $user = Auth::user();
             if ($user->role === 'admin') {
@@ -45,7 +45,14 @@ class LoginController extends Controller
                 return redirect()->intended('/dashboard');
             }
         }
-    }  
+
+        // Tambahkan hitungan percobaan login jika gagal
+        RateLimiter::hit($key);
+
+        // Kembalikan pesan login gagal
+        return back()->with('loginError','Login failed');
+    }
+ 
 
     public function logout() {
         Auth::logout();
