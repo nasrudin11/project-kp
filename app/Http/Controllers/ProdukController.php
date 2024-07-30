@@ -10,26 +10,27 @@ use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
-    /**
-     * Display a listing of the products.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $produks = Produk::all();
-        return view('dashboard.admin.produk', compact('produks'), ['title'=>'Data Produk']);
+        return view('dashboard.admin.produk',compact('produks'), ['title' => 'Data Produk']);
     }
 
-    /**
-     * Store a newly created product in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function getProdukData()
+    {
+        return datatables()->of(Produk::query())
+            ->addIndexColumn() // Menambahkan nomor urut
+            ->addColumn('aksi', function ($produk) {
+                return '
+                    <button class="btn btn-primary btn-sm" onclick="editProduk(' . $produk->id_produk . ', \'' . $produk->nama_produk . '\', \'' . $produk->target . '\', \'' . $produk->gambar . '\')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(' . $produk->id_produk . ', \'produk\')">Hapus</button>
+                ';
+            })
+            ->make(true);
+    }
+
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama_produk' => 'required|string|max:35|unique:produk,nama_produk',
             'gambar' => 'nullable|image|file|max:2048',
@@ -50,13 +51,6 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    /**
-     * Update the specified product in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         try{
@@ -93,28 +87,16 @@ class ProdukController extends Controller
         
     }
 
-    /**
-     * Remove the specified product from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    public function destroy($id)
+    public function delete($id)
     {
-        $product = Produk::findOrFail($id);
+        $produk = Produk::find($id);
 
-        // Hapus gambar produk jika ada
-        if ($product->gambar) {
-            // Pastikan path gambar sesuai dengan path penyimpanan
-            Storage::delete('public/' . $product->gambar);
+        if ($produk) {
+            $produk->delete();
+            return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+        } else {
+            return back()->with('error', 'Produk gagal dihapus');
         }
-
-        $product->delete();
-
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
-
-
 
 }

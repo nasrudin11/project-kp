@@ -21,6 +21,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'gambar_profil',
+        'alamat',
+        'no_tlp',
+        'jenis_kelamin',
+        'tanggal_lahir',
+        'id_pasar',
+        'id_kecamatan'
     ];
 
     /**
@@ -42,4 +50,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+        // Jika harga_produk memiliki kolom id_pasar untuk relasi dengan pasar
+    public function pasar()
+    {
+        return $this->belongsTo(Pasar::class, 'id_pasar');
+    }
+
+    // Jika harga_produk memiliki kolom id_kecamatan untuk relasi dengan kecamatan
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
+    }
 }

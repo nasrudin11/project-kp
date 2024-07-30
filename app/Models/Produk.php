@@ -16,6 +16,11 @@ class Produk extends Model
     protected $fillable = [
         'nama_produk',
         'gambar',
-        'tipe_produk'
+        'target'
     ];
+
+    public function hargaProduk()
+    {
+        return $this->hasMany(HargaProduk::class, 'id_produk', 'id_produk');
+    }
 }

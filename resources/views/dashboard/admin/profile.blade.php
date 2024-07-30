@@ -9,8 +9,8 @@
     
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Profile User</li>
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Profile Administrator</li>
             </ol>
         </nav>
     </div>
@@ -37,20 +37,12 @@
 
             
             @if (Auth::user()->gambar_profil)
-                <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="180px" height="180px" class="rounded-circle border border-black border-2 mb-2">
+            <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="180px" height="180px" class="rounded-circle border border-black border-2 mb-2">
             @else
-                <img src="" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
+            <img src="" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
             @endif
-
             <span class="poppins-bold mt-2">{{ Auth::user()->role }}</span>
             <span class="poppins-medium mt-1">{{ Auth::user()->name }}</span>
-
-            @if(Auth::user()->role == 'produsen')
-                <span class="poppins-medium mt-1">{{ Auth::user()->kecamatan->nama_kecamatan }}</span> 
-            @else 
-                <span class="poppins-medium mt-1">{{ Auth::user()->pasar->nama_pasar }}</span> 
-            @endif
-
           </div>
         </div>
       </div>
@@ -69,7 +61,7 @@
 
               <div class="tab-content" id="myTabContent">
                   <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <form action="{{ route('profile-user.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                       @csrf
                   
                       <div class="row mb-3">
@@ -155,9 +147,8 @@
                   
                   </div>
                   <div class="tab-pane fade" id="reset" role="tabpanel" aria-labelledby="reset-tab">
-                    <form action="{{ route('profile-user.update-password') }}" method="POST">
+                    <form action="{{ route('password.update') }}" method="POST">
                       @csrf
-                      
                       <div class="row mb-3">
                           <label for="inputPassword" class="col-sm-2 col-form-label">Password Baru</label>
                           <div class="col-sm-10">

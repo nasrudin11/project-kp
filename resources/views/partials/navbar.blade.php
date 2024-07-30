@@ -1,8 +1,9 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow">
     <div class="container">
         <a class="navbar-brand" href="/">
-            <img src="/img/logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-            KOMINFO
+            <img src="/img/logo3.png" alt="Logo" width="30" class="d-inline-block align-text-top">
+            <img src="/img/logo2.png" alt="Logo" height="30" class="d-inline-block align-text-top">
+            {{-- KOMINFO --}}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
             <span class="navbar-toggler-icon"></span>
@@ -16,12 +17,13 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}</a></li>
-                            <li><a class="dropdown-item" href="
-                                 @if(Auth::user()->role == 'admin')
-                                    {{ route('admin.dashboard') }}
-                                @else
-                                    {{ route('dashboard') }}
-                                @endif
+                            <li>
+                                <a class="dropdown-item" href="
+                                    @if(Auth::user()->role == 'admin')
+                                        {{ route('admin.dashboard') }}
+                                    @else
+                                        {{ route('dashboard') }}
+                                    @endif
                                 ">Dashboard</a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
@@ -59,14 +61,15 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}</a></li>
-                        <li><a class="dropdown-item" href="
-                            @if(Auth::user()->role == 'admin')
-                               {{ route('admin.dashboard') }}
-                           @else
-                               {{ route('dashboard') }}
-                           @endif
-                           ">Dashboard</a>
-                       </li>
+                        <li>
+                            <a class="dropdown-item" href="
+                                @if(Auth::user()->role == 'admin')
+                                    {{ route('admin.dashboard') }}
+                                @else
+                                    {{ route('dashboard') }}
+                                @endif
+                            ">Dashboard</a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="/logout" method="post">

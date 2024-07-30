@@ -19,10 +19,13 @@ class RoleMiddleware
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role == 'admin' && $role != 'admin') {
-                return redirect('/dashboard');
-            } elseif ($role == 'user' && !in_array($user->role, ['pengecer', 'grosir', 'produsen'])) {
-                return redirect('/admin-dashboard');
+            // Cek jika peran yang diperlukan adalah admin
+            if ($role == 'admin' && $user->role != 'admin') {
+                return redirect('/dashboard'); 
+            }
+            
+            if ($role == 'user' && !in_array($user->role, ['pedagang', 'produsen'])) {
+                return redirect('/admin-dashboard'); 
             }
 
             return $next($request);
@@ -30,4 +33,5 @@ class RoleMiddleware
 
         return redirect('/login');
     }
+
 }

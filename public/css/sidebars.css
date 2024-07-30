@@ -1,3 +1,118 @@
+body{
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  color: #3f4142
+}
+
+.poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.poppins-black {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.poppins-thin-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.poppins-extralight-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.poppins-light-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.poppins-regular-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.poppins-medium-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.poppins-semibold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.poppins-bold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.poppins-extrabold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.poppins-black-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+
 /* Styles for the sidebar */
 .sidebar {
   width: 200px; /* Initial width */
@@ -9,20 +124,29 @@
   z-index: 1040; /* Higher than default Bootstrap z-index for dropdowns */
 }
 
-/* Other styles remain the same */
+Other styles remain the same
 .sidebar .logo {
   width: 40px; /* Default size */
   height: 40px; 
 }
 
+.nav-header {
+  font-size: 12px;
+}
+
 .nav-link-hover {
-  color: #000;
+  color: #3f4142;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link-hover:hover {
   background-color: rgba(0, 0, 0, 0.1);
-  color: #000;
+  color: #3f4142
+}
+
+.nav-link.nav-link-hover.active {
+  background-color: #004085; /* dark blue */
+  color: white;
 }
 
 /* Ensure the parent container has 100% width */
@@ -37,6 +161,16 @@
   text-align: left;
 }
 
+.btn-primary {
+  background-color: #004085; /* dark blue */
+  border-color: #004085; /* dark blue */
+}
+
+.btn-primary:hover {
+  background-color: #003366; /* darker blue */
+  border-color: #003366; /* darker blue */
+}
+
 /* Ensure the dropdown menu is full width */
 .dropdown-menu.w-100 {
   width: 100%;
@@ -48,3 +182,4 @@
   position: relative;
   z-index: 1020; /* Adjust to be lower than dropdown but higher than other content */
 }
+

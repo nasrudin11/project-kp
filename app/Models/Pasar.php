@@ -11,6 +11,6 @@ class Pasar extends Model
 
     protected $table = 'pasar';
     protected $primaryKey = 'id_pasar';
-    protected $fillable = ['nama_pasar '];
+    protected $fillable = ['nama_pasar', 'alamat_pasar'];
 
 }

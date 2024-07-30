@@ -1,41 +1,131 @@
 @extends('layouts.log-main')
 
-
 @section('content')
-    <main class="container-fluid mt-3">
-        <div class="card shadow border-0">
-            <div class="card-body">
-                <h1>Dashboard</h1>
-                <div id="container" style="width: 100%; height: 400px;"></div>
+    <main class="container mt-3 mb-3">
+        @include('partials.log-navbar')
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const chart = Highcharts.chart('container', {
-                            chart: {
-                                type: 'line'
-                            },
-                            title: {
-                                text: 'Price Trends of Staple Foods'
-                            },
-                            xAxis: {
-                                categories: @json($data['categories']),
-                                title: {
-                                    text: 'Months'
-                                }
-                            },
-                            yAxis: {
-                                min: 0,
-                                title: {
-                                    text: 'Price (Kg)',
-                                    align: 'high'
-                                }
-                            },
-                            series: @json($data['series']) // Multiple series for each food item
-                        });
-                    });
-                </script>
+        <div class="container d-flex justify-content-between align-items-center mt-4">
+            <h4>{{ $title }}</h4>
 
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
+                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+            </nav>       
+        </div>
+        
+        <div class="card shadow border-0 mt-4">
+            <div class="card-body">          
+                <div id="chart-pengecer-container"></div>
+                <div id="chart-produsen-container"></div>
             </div>
         </div>
+
+        @if($role == 'pedagang')
+            <div class="card shadow border-0 mt-4">
+                <div class="card-body">
+                    <div id="chart-grosir-container"></div>
+                </div>
+            </div>
+        @endif
     </main>
+
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the current month name
+            var monthName = new Date().toLocaleString('default', { month: 'long' });
+
+            var chartData = @json($chartData);
+            var datesFormatted = @json($datesFormatted);
+
+            if (chartData.pengecer && chartData.pengecer.length) {
+                Highcharts.chart('chart-pengecer-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Pengecer)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.pengecer
+                });
+            }
+
+            if (chartData.grosir && chartData.grosir.length) {
+                Highcharts.chart('chart-grosir-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Grosir)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.grosir
+                });
+            }
+
+            if (chartData.produsen && chartData.produsen.length) {
+                Highcharts.chart('chart-produsen-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Produsen)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.produsen
+                });
+            }
+        });
+    </script>
 @endsection

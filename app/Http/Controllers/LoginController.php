@@ -39,7 +39,7 @@ class LoginController extends Controller
             RateLimiter::clear($key);
 
             $user = Auth::user();
-            if ($user->role === 'admin') {
+            if ($user->role == 'admin') {
                 return redirect()->intended('/admin-dashboard');
             } else {
                 return redirect()->intended('/dashboard');
