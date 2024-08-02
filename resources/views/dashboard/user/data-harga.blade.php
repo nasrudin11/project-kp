@@ -120,7 +120,7 @@
                             <h4 class="text-center mt-4">Data Harga Pangan Tingkat Pedagang Pengecer</h4>
                             <h5 class="text-center mt-2">{{ $currentMonthName }}</h5>
                             <table class="table table-bordered table-hover mt-4">
-                                <thead class="table-primary align-middle">
+                                <thead class="table-primary align-middle text-center">
                                     <tr>
                                         <th rowspan="3">NO</th>
                                         <th rowspan="3">KOMODITI</th>
@@ -138,13 +138,13 @@
                                         @endforeach
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="align-middle">
                                     @foreach($dataPengecer as $produkId => $hargaEntries)
                                         <tr>
-                                            <th scope="row">{{ $loop->iteration }}</th>
+                                            <th class="text-center" scope="row">{{ $loop->iteration }}</th>
                                             <td>{{ $hargaEntries->first()->nama_produk ?? '-' }}</td>
                                             @foreach ($dates as $week => $date)
-                                                <td>
+                                                <td class="text-center">
                                                     @php
                                                         $hargaSenin = $hargaEntries->firstWhere('tgl_entry', $date['monday']);
                                                     @endphp
@@ -156,7 +156,7 @@
                                                         -
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @php
                                                         $hargaKamis = $hargaEntries->firstWhere('tgl_entry', $date['thursday']);
                                                     @endphp
@@ -179,7 +179,7 @@
                         <div class="tab-pane fade" id="data-grosir" role="tabpanel" aria-labelledby="grosir-tab">
                             <h4 class="text-center mt-4">Data Harga Pangan Tingkat Pedagang Grosir</h4>
                             <h5 class="text-center mt-2">{{ $currentMonthName }}</h5>
-                            <table class="table table-bordered table-hover text-center mt-4">
+                            <table class="table table-bordered table-hover mt-4">
                                 <thead class="table-primary align-middle">
                                     <tr>
                                         <th rowspan="3">NO</th>
@@ -198,13 +198,13 @@
                                         @endforeach
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="align-middle">
                                     @foreach($dataGrosir as $produkId => $hargaEntries)
                                         <tr>
                                             <th scope="row">{{ $loop->iteration }}</th>
                                             <td>{{ $hargaEntries->first()->nama_produk ?? '-' }}</td>
                                             @foreach ($dates as $week => $date)
-                                                <td>
+                                                <td class="text-center">
                                                     @php
                                                         $hargaSenin = $hargaEntries->firstWhere('tgl_entry', $date['monday']);
                                                     @endphp
@@ -216,7 +216,7 @@
                                                         -
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @php
                                                         $hargaKamis = $hargaEntries->firstWhere('tgl_entry', $date['thursday']);
                                                     @endphp

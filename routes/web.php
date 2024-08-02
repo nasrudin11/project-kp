@@ -74,8 +74,12 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::delete('/admin-dashboard/kecamatan/delete/{id}', [LokasiController::class, 'destroyKecamatan'])->name('delete.kecamatan');
 
     // Data Harga
-    Route::get('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'index']);
-    Route::get('/harga-produk/data', [DataLaporanProdukController::class, 'getData'])->name('harga-produk.data');
+    Route::get('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'index'])->name('admin-dashboard.data-harga');
+
+    // Route untuk menangani permintaan data
+    Route::post('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'handleData'])->name('handle-data');
+
+
 
     // Data Pasokan
     Route::get('/admin-dashboard/data-pasokan', function (){

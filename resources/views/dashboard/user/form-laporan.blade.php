@@ -60,7 +60,12 @@
                             <input type="hidden" name="id_user" value="{{ Auth::id() }}">
                             <input type="hidden" name="tipe_harga" value="pengecer">
 
-                            <table class="table table-bordered mt-4">
+                            <div class="mt-3">
+                                <label for="" class="form-label">Tanggal Entry</label>
+                                <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                            </div>
+
+                            <table class="table table-bordered mt-3">
                                 <thead>
                                     <tr>
                                         <th>Produk</th>
@@ -78,13 +83,13 @@
                                             {{ $produk->nama_produk }}
                                         </td>
                                         <td class="align-middle">
-                                            <input type="number" class="form-control @error('data.' . $index . '.harga') is-invalid @enderror" name="data[{{ $index }}][harga]" placeholder="Harga" step="0.01">
+                                            <input type="number" class="form-control @error('data.' . $index . '.harga') is-invalid @enderror" name="data[{{ $index }}][harga]" placeholder="Harga" value="0" step="0.01">
                                             @error('data.' . $index . '.harga')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </td>
                                         <td class="align-middle">
-                                            <input type="number" class="form-control @error('data.' . $index . '.pasokan') is-invalid @enderror" name="data[{{ $index }}][pasokan]" placeholder="Pasokan" step="0.01">
+                                            <input type="number" class="form-control @error('data.' . $index . '.pasokan') is-invalid @enderror" name="data[{{ $index }}][pasokan]" placeholder="Pasokan" value="0" step="0.01">
                                             @error('data.' . $index . '.pasokan')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -117,6 +122,11 @@
                             <input type="hidden" name="id_user" value="{{ Auth::id() }}">
                             <input type="hidden" name="tipe_harga" value="grosir">
 
+                            <div class="mt-3">
+                                <label for="" class="form-label">Tanggal Entry</label>
+                                <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                            </div>
+
                             <table class="table table-bordered mt-4">
                                 <thead>
                                     <tr>
@@ -134,8 +144,8 @@
                                             <input type="hidden" name="data[{{ $index }}][id_produk]" value="{{ $produk->id_produk }}">
                                             {{ $produk->nama_produk }}
                                         </td>
-                                        <td><input type="number" class="form-control" name="data[{{ $index }}][harga]" placeholder="Harga" step="0.01"></td>
-                                        <td><input type="number" class="form-control" name="data[{{ $index }}][pasokan]" placeholder="Pasokan" step="0.01"></td>
+                                        <td><input type="number" class="form-control" name="data[{{ $index }}][harga]" placeholder="Harga" value="0" step="0.01"></td>
+                                        <td><input type="number" class="form-control" name="data[{{ $index }}][pasokan]" placeholder="Pasokan" value="0" step="0.01"></td>
                                         <td><input type="text" class="form-control" name="data[{{ $index }}][satuan_harga]" value="Kg"></td>
                                         <td><input type="text" class="form-control" name="data[{{ $index }}][satuan_pasokan]" value="Kg"></td>
                                     </tr>
@@ -152,6 +162,11 @@
                             @csrf
                             <input type="hidden" name="id_user" value="{{ Auth::id() }}">
                             <input type="hidden" name="tipe_harga" value="produsen">
+
+                            <div class="mt-3">
+                                <label for="" class="form-label">Tanggal Entry</label>
+                                <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                            </div>
 
                             <table class="table table-bordered mt-4">
                                 <thead>

@@ -19,7 +19,7 @@
 
         <div class="card shadow border-0 mt-3">
             <div class="card-body">
-                <div id="container" style="width: 100%; height: 400px;"></div>
+                <div id="container" style="width: 100%"></div>
 
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
@@ -28,7 +28,7 @@
                                 type: 'line'
                             },
                             title: {
-                                text: 'Price Trends of Staple Foods'
+                                text: 'Rata-Rata Harga Produk Tingkat Pedagang Pengecer'
                             },
                             xAxis: {
                                 categories: @json($data['categories']),
@@ -45,6 +45,7 @@
                             },
                             series: @json($data['series']) // Multiple series for each food item
                         });
+
                     });
                 </script>
 
