@@ -4,8 +4,8 @@
         <thead class="table-primary align-middle">
             <tr>
                 <th rowspan="2">KOMODITI</th>
-                @foreach ($pasars as $pasar)
-                    <th rowspan="2">{{ $pasar->nama_pasar }}</th>
+                @foreach ($kecamatans as $kecamatan)
+                    <th rowspan="2">{{ $kecamatan->nama_kecamatan }}</th>
                 @endforeach
                 <th rowspan="2">Harga Rata-rata (Kg)</th>
             </tr>
@@ -14,10 +14,10 @@
             @foreach ($dataProdusen as $komoditi => $rows)
                 <tr>
                     <td>{{ $komoditi }}</td>
-                    @foreach ($pasars as $pasar)
+                    @foreach ($kecamatans as $kecamatan)
                         <td>
                             @php
-                                $harga = $rows->where('id_pasar', $pasar->id_pasar)->pluck('harga_rata_rata')->first();
+                                $harga = $rows->where('id_kecamatan', $kecamatan->id_kecamatan)->pluck('harga_rata_rata')->first();
                                 echo $harga ? number_format($harga) : '-';
                             @endphp
                         </td>
