@@ -31,27 +31,30 @@ class DataLaporanProdukController extends Controller
         // Initialize data variables
         $dataPengecer = $dataGrosir = $dataDetailPengecer = $dataDetailGrosir = $dataKecamatan = $dataDetailProdusen = null;
 
-        if ($activeTab == 'tab-pasar') {
             if ($idPasar == 'semua') {
                 // Call the private method for Pasar
                 $data = $this->getDataPasar($request);
                 $dataPengecer = $data['dataPengecer'] ?? null;
                 $dataGrosir = $data['dataGrosir'] ?? null;
-            } else {
+                $activeTab == 'tab-pasar';
+
+            } elseif($idPasar != 'semua') {
                 // Call the private method for Pasar with detail
                 $dataDetail = $this->getDataPasar($request);
                 $dataDetailPengecer = $dataDetail['dataDetailPengecer'] ?? null;
                 $dataDetailGrosir = $dataDetail['dataDetailGrosir'] ?? null;
+                $activeTab == 'tab-pasar';
             }
-        } elseif ($activeTab == 'tab-kecamatan') {
+
             if ($idKecamatan == 'semua') {
                 // Call the private method for Kecamatan
                 $dataKecamatan = $this->getDataKecamatan($request)['dataKecamatan'] ?? null;
-            } else {
+                $activeTab == 'tab-kecamatan';
+            } elseif($idKecamatan != 'semua') {
                 // Call the private method for Kecamatan with detail
                 $dataDetailProdusen = $this->getDataKecamatan($request)['dataDetailProdusen'] ?? null;
+                $activeTab == 'tab-kecamatan';
             }
-        }
 
         return view('dashboard.admin.data-harga', [
             'pasars' => $pasars,
@@ -155,24 +158,6 @@ class DataLaporanProdukController extends Controller
         }
     }
 
-    public function handleData(Request $request)
-    {
-        // Mengambil data dari permintaan
-        $idPasar = $request->get('id_pasar', 'semua');
-        $idKecamatan = $request->get('id_kecamatan', 'semua');
-        $activeTab = $request->get('active_tab', 'tab-pasar');
-
-        // Memanggil metode privat untuk mengolah data
-        $data = $this->getDataPasar($request);
-
-        // Mengarahkan kembali dengan query string
-        return redirect()->route('admin-dashboard.data-harga', [
-            'id_pasar' => $idPasar,
-            'id_kecamatan' => $idKecamatan,
-            'active_tab' => $activeTab
-        ]);
-    }
-    
     private function getDataKecamatan(Request $request)
     {
         $idKecamatan = $request->get('id_kecamatan', 'semua');
@@ -190,13 +175,13 @@ class DataLaporanProdukController extends Controller
             // Ambil data rata-rata harga produsen untuk semua kecamatan
             $dataKecamatan = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_kecamatan')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_pasar')
                 ->where('harga_produk.tipe_harga', 'produsen')
                 ->where(function($query) {
                     $query->where('produk.target', 'Produsen')
                         ->orWhere('produk.target', 'Keduanya');
                 })
-                ->groupBy('produk.id_produk', 'users.id_kecamatan', 'produk.nama_produk')
+                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
                 ->get()
                 ->groupBy('komoditi');
     
@@ -219,6 +204,7 @@ class DataLaporanProdukController extends Controller
                 ->select('harga_produk.*', 'produk.nama_produk')
                 ->get()
                 ->groupBy('produk.id_produk');
+
     
             return [
                 'dataDetailProdusen' => $dataDetailProdusen,
@@ -230,6 +216,26 @@ class DataLaporanProdukController extends Controller
             ];
         }
     }
+
+    public function handleData(Request $request)
+    {
+        // Mengambil data dari permintaan
+        $idPasar = $request->get('id_pasar', 'semua');
+        $idKecamatan = $request->get('id_kecamatan', 'semua');
+        $activeTab = $request->get('active_tab', 'tab-pasar');
+
+        // Memanggil metode privat untuk mengolah data
+        $data = $this->getDataPasar($request);
+
+        // Mengarahkan kembali dengan query string
+        return redirect()->route('admin-dashboard.data-harga', [
+            'id_pasar' => $idPasar,
+            'id_kecamatan' => $idKecamatan,
+            'active_tab' => $activeTab
+        ]);
+    }
+    
+
     
 
 

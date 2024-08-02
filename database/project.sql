@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2024 at 03:06 AM
+-- Generation Time: Aug 02, 2024 at 09:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,40 @@ SET time_zone = "+00:00";
 --
 -- Database: `project`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_dynamic_view` ()   BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE pasar_name VARCHAR(255);
+    DECLARE cur CURSOR FOR SELECT nama_pasar FROM pasar;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    SET @sql = 'CREATE OR REPLACE VIEW laporan_harga_grosir_semua_pasar AS SELECT p.nama_produk AS produk,';
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO pasar_name;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        SET @sql = CONCAT(@sql, ' AVG(CASE WHEN ps.nama_pasar = "', pasar_name, '" THEN hp.harga ELSE NULL END) AS `', pasar_name, '`,');
+    END LOOP;
+
+    CLOSE cur;
+
+    SET @sql = CONCAT(@sql, ' AVG(hp.harga) AS ratarata, hp.tgl_pelaporan AS tanggal FROM harga_produk hp JOIN produk p ON hp.id_produk = p.id_produk JOIN pasar ps ON hp.id_pasar = ps.id_pasar WHERE hp.tipe_harga = ''grosir'' GROUP BY p.nama_produk, hp.tgl_pelaporan;');
+
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -47,16 +81,185 @@ CREATE TABLE `harga_produk` (
   `id_harga` bigint(20) UNSIGNED NOT NULL,
   `id_user` int(11) UNSIGNED NOT NULL,
   `id_produk` int(10) UNSIGNED NOT NULL,
-  `harga` decimal(10,2) NOT NULL,
-  `pasokan` decimal(10,2) NOT NULL,
-  `id_satuan_harga` int(11) UNSIGNED NOT NULL,
-  `id_satuan_pasokan` int(11) UNSIGNED NOT NULL,
+  `harga` decimal(10,0) NOT NULL DEFAULT 0,
+  `pasokan` decimal(10,0) NOT NULL DEFAULT 0,
+  `satuan_harga` varchar(3) NOT NULL DEFAULT 'Kg',
+  `satuan_pasokan` varchar(3) NOT NULL DEFAULT 'Kg',
   `tgl_entry` date NOT NULL,
   `tgl_pelaporan` date NOT NULL,
+  `tipe_harga` enum('grosir','pengecer','produsen') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `tipe_harga` enum('grosir','pengecer','produsen') NOT NULL DEFAULT 'pengecer'
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `harga_produk`
+--
+
+INSERT INTO `harga_produk` (`id_harga`, `id_user`, `id_produk`, `harga`, `pasokan`, `satuan_harga`, `satuan_pasokan`, `tgl_entry`, `tgl_pelaporan`, `tipe_harga`, `created_at`, `updated_at`) VALUES
+(162, 7, 34, 12550, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(163, 7, 35, 10000, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(164, 7, 36, 9000, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(165, 7, 37, 6500, 40, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(166, 7, 38, 9000, 35, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(167, 7, 39, 22000, 35, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(168, 7, 40, 25000, 40, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(169, 7, 41, 5000, 50, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(170, 7, 42, 6000, 30, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(171, 7, 43, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(172, 7, 44, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(173, 7, 45, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(174, 7, 46, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(175, 7, 47, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(176, 7, 48, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(177, 7, 49, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(178, 7, 50, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(179, 7, 51, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(180, 7, 52, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(181, 7, 53, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(182, 7, 54, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(183, 7, 55, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(184, 7, 56, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(185, 7, 57, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'pengecer', NULL, NULL),
+(186, 7, 34, 11500, 800, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(187, 7, 35, 9000, 800, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(188, 7, 36, 8000, 800, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(189, 7, 37, 8500, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(190, 7, 38, 5500, 70, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(191, 7, 39, 8000, 70, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(192, 7, 40, 20000, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(193, 7, 41, 23000, 70, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(194, 7, 42, 4000, 100, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(195, 7, 43, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(196, 7, 44, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(197, 7, 45, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(198, 7, 46, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(199, 7, 47, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(200, 7, 48, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(201, 7, 49, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(202, 7, 50, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(203, 7, 51, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(204, 7, 52, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(205, 7, 53, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(206, 7, 54, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(207, 7, 55, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(208, 7, 56, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(209, 7, 57, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-29', 'grosir', NULL, NULL),
+(210, 8, 30, 5000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(211, 8, 31, 5557, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(212, 8, 32, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(213, 8, 33, 4000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(214, 8, 34, 9500, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(215, 8, 35, 8600, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(216, 8, 36, 7450, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(217, 8, 38, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(218, 8, 39, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(219, 8, 40, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(220, 8, 41, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(221, 8, 42, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(222, 8, 43, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(223, 8, 46, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(224, 8, 47, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(225, 8, 48, 30000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(226, 8, 55, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(227, 8, 56, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(228, 8, 57, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-30', 'produsen', NULL, NULL),
+(229, 7, 34, 12000, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(230, 7, 35, 10000, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(231, 7, 36, 8000, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(232, 7, 37, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(233, 7, 38, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(234, 7, 39, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(235, 7, 40, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(236, 7, 41, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(237, 7, 42, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(238, 7, 43, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(239, 7, 44, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(240, 7, 45, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(241, 7, 46, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(242, 7, 47, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(243, 7, 48, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(244, 7, 49, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(245, 7, 50, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(246, 7, 51, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(247, 7, 52, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(248, 7, 53, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(249, 7, 54, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(250, 7, 55, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(251, 7, 56, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(252, 7, 57, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(253, 9, 34, 11000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(254, 9, 35, 9000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(255, 9, 36, 8500, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(256, 9, 37, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(257, 9, 38, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(258, 9, 39, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(259, 9, 40, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(260, 9, 41, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(261, 9, 42, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(262, 9, 43, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(263, 9, 44, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(264, 9, 45, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(265, 9, 46, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(266, 9, 47, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(267, 9, 48, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(268, 9, 49, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(269, 9, 50, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(270, 9, 51, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(271, 9, 52, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(272, 9, 53, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(273, 9, 54, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(274, 9, 55, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(275, 9, 56, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(276, 9, 57, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'pengecer', NULL, NULL),
+(277, 9, 34, 12000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(278, 9, 35, 11000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(279, 9, 36, 9000, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(280, 9, 37, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(281, 9, 38, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(282, 9, 39, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(283, 9, 40, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(284, 9, 41, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(285, 9, 42, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(286, 9, 43, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(287, 9, 44, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(288, 9, 45, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(289, 9, 46, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(290, 9, 47, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(291, 9, 48, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(292, 9, 49, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(293, 9, 50, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(294, 9, 51, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(295, 9, 52, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(296, 9, 53, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(297, 9, 54, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(298, 9, 55, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(299, 9, 56, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(300, 9, 57, 0, 0, 'Kg', 'Kg', '2024-07-29', '2024-07-31', 'grosir', NULL, NULL),
+(301, 9, 34, 11000, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(302, 9, 35, 10500, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(303, 9, 36, 8500, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(304, 9, 37, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(305, 9, 38, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(306, 9, 39, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(307, 9, 40, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(308, 9, 41, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(309, 9, 42, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(310, 9, 43, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(311, 9, 44, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(312, 9, 45, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(313, 9, 46, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(314, 9, 47, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(315, 9, 48, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(316, 9, 49, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(317, 9, 50, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(318, 9, 51, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(319, 9, 52, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(320, 9, 53, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(321, 9, 54, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(322, 9, 55, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(323, 9, 56, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL),
+(324, 9, 57, 0, 0, 'Kg', 'Kg', '2024-08-01', '2024-07-31', 'pengecer', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -91,42 +294,10 @@ INSERT INTO `kecamatan` (`id_kecamatan`, `nama_kecamatan`, `created_at`, `update
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `laporan_grosir`
+-- Stand-in structure for view `laporan_grosir_pasar_tertentu`
 -- (See below for the actual view)
 --
-CREATE TABLE `laporan_grosir` (
-`id_harga` bigint(20) unsigned
-,`produk` varchar(30)
-,`pasar` varchar(30)
-,`harga` varchar(17)
-,`pasokan` varchar(13)
-,`pelapor` varchar(40)
-,`tgl_lapor` date
-,`hari` varchar(9)
-,`tgl_entri` date
-,`satuan_harga` varchar(10)
-,`satuan_pasokan` varchar(10)
-);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `laporan_harga_grosir`
--- (See below for the actual view)
---
-CREATE TABLE `laporan_harga_grosir` (
-`produk` varchar(30)
-,`Psr_Sidoharjo` decimal(32,2)
-,`Psr_Ikan` decimal(32,2)
-,`Psr_Babat` decimal(32,2)
-,`Psr_Blimbing` decimal(32,2)
-,`Psr_Sumberdadi` decimal(32,2)
-,`Psr_Sendangrejo` decimal(32,2)
-,`Psr_Sekaran` decimal(32,2)
-,`Psr_Lembung` decimal(32,2)
-,`Psr_Sukodadi` decimal(32,2)
-,`ratarata` decimal(39,0)
-,`tanggal` date
+CREATE TABLE `laporan_grosir_pasar_tertentu` (
 );
 
 -- --------------------------------------------------------
@@ -137,16 +308,16 @@ CREATE TABLE `laporan_harga_grosir` (
 --
 CREATE TABLE `laporan_harga_pengecer` (
 `produk` varchar(30)
-,`Psr_Sidoharjo` decimal(32,2)
-,`Psr_Ikan` decimal(32,2)
-,`Psr_Babat` decimal(32,2)
-,`Psr_Blimbing` decimal(32,2)
-,`Psr_Sumberdadi` decimal(32,2)
-,`Psr_Sendangrejo` decimal(32,2)
-,`Psr_Sekaran` decimal(32,2)
-,`Psr_Lembung` decimal(32,2)
-,`Psr_Sukodadi` decimal(32,2)
-,`ratarata` decimal(39,0)
+,`Psr_Sidoharjo` decimal(32,0)
+,`Psr_Ikan` decimal(32,0)
+,`Psr_Babat` decimal(32,0)
+,`Psr_Blimbing` decimal(32,0)
+,`Psr_Sumberdadi` decimal(32,0)
+,`Psr_Sendangrejo` decimal(32,0)
+,`Psr_Sekaran` decimal(32,0)
+,`Psr_Lembung` decimal(32,0)
+,`Psr_Sukodadi` decimal(32,0)
+,`ratarata` decimal(41,0)
 ,`tanggal` date
 );
 
@@ -157,17 +328,6 @@ CREATE TABLE `laporan_harga_pengecer` (
 -- (See below for the actual view)
 --
 CREATE TABLE `laporan_pengecer` (
-`id_harga` bigint(20) unsigned
-,`produk` varchar(30)
-,`pasar` varchar(30)
-,`harga` varchar(17)
-,`pasokan` varchar(13)
-,`pelapor` varchar(40)
-,`tgl_lapor` date
-,`hari` varchar(9)
-,`tgl_entri` date
-,`satuan_harga` varchar(10)
-,`satuan_pasokan` varchar(10)
 );
 
 -- --------------------------------------------------------
@@ -177,17 +337,6 @@ CREATE TABLE `laporan_pengecer` (
 -- (See below for the actual view)
 --
 CREATE TABLE `laporan_produsen` (
-`id_harga` bigint(20) unsigned
-,`produk` varchar(30)
-,`kecamatan` varchar(30)
-,`harga` varchar(17)
-,`pasokan` varchar(13)
-,`pelapor` varchar(40)
-,`tgl_lapor` date
-,`hari` varchar(9)
-,`tgl_entri` date
-,`satuan_harga` varchar(10)
-,`satuan_pasokan` varchar(10)
 );
 
 -- --------------------------------------------------------
@@ -236,15 +385,15 @@ CREATE TABLE `pasar` (
 --
 
 INSERT INTO `pasar` (`id_pasar`, `nama_pasar`, `alamat_pasar`, `created_at`, `updated_at`) VALUES
-(1, 'Psr. Sidoarjp', 'Lamongan', NULL, NULL),
-(2, 'Psr. Ikan', 'Lamongan', NULL, NULL),
+(1, 'Psr. Sidoharjo', 'Lamongan', NULL, '2024-07-25 23:23:42'),
+(2, 'Psr. Ikan', 'Lamongan', NULL, '2024-07-21 23:55:53'),
 (3, 'Psr. Babat', 'Babat', NULL, NULL),
 (4, 'Psr. Blimbing', 'Paciran', NULL, NULL),
 (5, 'Psr. Sumberdadi', 'Mantup', NULL, NULL),
 (6, 'Psr. Sendangrejo', 'Ngimbang', NULL, NULL),
 (7, 'Psr. Sekaran', 'Sekaran', NULL, NULL),
 (8, 'Psr. Lembung', 'Kalitengah', NULL, NULL),
-(9, 'Psr. Sukodadi', 'Sukodadi', NULL, NULL);
+(9, 'Psr. Sukodadi', 'Sukodadi', NULL, '2024-07-25 23:39:51');
 
 -- --------------------------------------------------------
 
@@ -297,10 +446,11 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`id_produk`, `nama_produk`, `gambar`, `target`, `created_at`, `updated_at`) VALUES
-(31, 'Gabah Kering Panen (GKP)', NULL, 'Produsen', NULL, NULL),
-(32, 'Gabah Kering Giling (GKG)', NULL, 'Produsen', NULL, NULL),
-(33, 'Jagung Pipilan Basah', NULL, 'Produsen', NULL, NULL),
-(34, 'Jagung Pipilan Kering', NULL, 'Produsen', NULL, NULL),
+(30, 'Gabah Kering Panen (GKP)', 'produk-img/gdgO0n6eZWAYAeiIc9jjSs8XTcLggrwk3x1AILRF.jpg', 'Produsen', NULL, '2024-07-23 18:40:27'),
+(31, 'Gabah Kering Giling (GKG)', NULL, 'Produsen', NULL, NULL),
+(32, 'Jagung Pipilan Basah', NULL, 'Produsen', NULL, NULL),
+(33, 'Jagung Pipilan Kering', NULL, 'Produsen', NULL, NULL),
+(34, 'Beras Premium', NULL, 'Keduanya', '2024-07-29 12:19:35', NULL),
 (35, 'Beras Medium', NULL, 'Keduanya', '2024-07-20 08:04:37', '2024-07-20 08:10:27'),
 (36, 'Beras Termurah', NULL, 'Keduanya', '2024-07-20 08:04:44', '2024-07-20 08:10:35'),
 (37, 'Jagung Pipilan', NULL, 'Pedagang', '2024-07-20 08:04:51', '2024-07-20 08:04:51'),
@@ -323,8 +473,7 @@ INSERT INTO `produk` (`id_produk`, `nama_produk`, `gambar`, `target`, `created_a
 (54, 'Daging Sapi', NULL, 'Pedagang', '2024-07-20 08:08:35', '2024-07-20 08:08:35'),
 (55, 'Ikan Bandeng', NULL, 'Keduanya', '2024-07-20 08:08:50', '2024-07-20 08:14:29'),
 (56, 'Ikan Mujair', NULL, 'Keduanya', '2024-07-20 08:09:04', '2024-07-20 08:14:44'),
-(57, 'Udang', NULL, 'Keduanya', '2024-07-20 08:09:13', '2024-07-20 08:14:52'),
-(65, 'Contoh', NULL, 'Produsen', '2024-07-20 09:31:19', '2024-07-20 09:31:19');
+(57, 'Udang', NULL, 'Keduanya', '2024-07-20 08:09:13', '2024-07-20 08:14:52');
 
 -- --------------------------------------------------------
 
@@ -352,41 +501,39 @@ CREATE TABLE `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','pedagang','produsen') NOT NULL,
-  `gambar_profil` varchar(255) NOT NULL,
+  `gambar_profil` varchar(255) DEFAULT NULL,
   `id_kecamatan` int(10) UNSIGNED DEFAULT NULL,
   `id_pasar` int(10) UNSIGNED DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `alamat` varchar(20) DEFAULT NULL,
+  `no_tlp` varchar(14) DEFAULT NULL,
+  `jenis_kelamin` enum('laki-laki','perempuan') DEFAULT NULL,
+  `tanggal_lahir` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `gambar_profil`, `id_kecamatan`, `id_pasar`, `remember_token`, `created_at`, `updated_at`) VALUES
-(6, 'Mas Admin', 'admin@gmail.com', NULL, '$2y$12$K.lWwMhuUZY59BYaGSrFuO9BrQV6Pdwzn0Ng6WdXZTtySvmnfPt.m', 'admin', '', NULL, NULL, NULL, '2024-07-18 22:40:34', '2024-07-18 22:40:34'),
-(7, 'Mas Pedagang', 'pengecer@gmail.com', NULL, '$2y$12$A.i68ntY9OEZ21i0lSR/yui49vcVb6DbMmmQSMI8JrIn7Wj.QQYam', 'pedagang', '', NULL, NULL, NULL, '2024-07-18 22:40:34', '2024-07-18 22:40:34'),
-(8, 'Mas Produsen', 'produsen@gmail.com', NULL, '$2y$12$Y5.KpPdkCtpD2BBQygroj.tsnRd5upumyScFAoSKG7U4I5GWo1G4S', 'produsen', '', NULL, NULL, NULL, '2024-07-18 22:40:34', '2024-07-18 22:40:34'),
-(9, 'Ahmad Nasrudin Jamil', 'ahmad@gmail.com', NULL, '$2y$12$IkJ8GvXa7EVWOsEOH0C1WegHCftLwhB/LkLj8agv0fnQR/poIioca', 'produsen', 'profil-img/iKoeWJqY42ebcezMaQtpsMxBD0wh9q36RcklMiPS.jpg', NULL, NULL, NULL, '2024-07-20 06:50:19', '2024-07-20 06:50:19');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `gambar_profil`, `id_kecamatan`, `id_pasar`, `remember_token`, `created_at`, `updated_at`, `alamat`, `no_tlp`, `jenis_kelamin`, `tanggal_lahir`) VALUES
+(6, 'Mas Admin', 'admin@mail.com', NULL, '$2y$12$mHVNcGZJVNDYo6VMLr3nl.zG6tBGbqrRXI6SvLtQtqHXk8Fi2rYeq', 'admin', 'profil-img/y7Ph052We9reytZ3xIcvnPfrZ8HnKiUDyZuarCej.png', NULL, NULL, NULL, '2024-07-18 22:40:34', '2024-07-25 05:52:59', 'Lamongan', '081', 'laki-laki', '2002-01-08'),
+(7, 'Admin Psr Sendangrejo', 'sendangrejo@gmail.com', NULL, '$2y$12$M2iqL5VilUupW3HOsQXAhu/zr98n5issJ0KS.7xM0bluWDzQohiTi', 'pedagang', 'profil-img/AzH66cLoGdU8WTPgbViFd2CYyjBWdgIwP3R0fcrY.png', 1, 6, NULL, '2024-07-18 22:40:34', '2024-07-30 22:57:09', 'Turi AI', '088', 'laki-laki', '2000-05-20'),
+(8, 'Admin Kec. Tikung', 'tikung@gmail.com', NULL, '$2y$12$ahGzrHIjBnCYAG2AECWD1e4JNj7nZSTjBlKoR0PzzIHbNXkDuoxx.', 'produsen', 'profil-img/x79zLbK84NgmBJJwEnNwJQ0t8RqAq2v58cAgm98B.png', 1, 1, NULL, '2024-07-18 22:40:34', '2024-07-30 22:57:26', NULL, NULL, 'laki-laki', NULL),
+(9, 'Admin Psr Ikan', 'Ikan@gmail.com', NULL, '$2y$12$N1xhl9o32ci/AuCmN0OaX.6VKmogwrxnkI1c9lDBqzuBZYJC8k.nO', 'pedagang', 'profil-img/iKoeWJqY42ebcezMaQtpsMxBD0wh9q36RcklMiPS.jpg', 1, 2, NULL, '2024-07-20 06:50:19', '2024-07-30 22:55:56', NULL, NULL, 'laki-laki', NULL),
+(11, 'Admin Psr Babat', 'babat@gmail.com', NULL, '$2y$12$tg7oMvPzUyaSDwF5Llkx4ePaAFpgjoOTMClT95yORpt4VnSw/KLI2', 'pedagang', NULL, 1, 3, NULL, '2024-07-22 23:49:44', '2024-07-30 22:56:50', NULL, NULL, 'laki-laki', NULL),
+(12, 'Admin Psr Blimbing', 'blimbing@gmail.com', NULL, '$2y$12$tJHI2c2IjmDqUnhXS9plKuyYPKq3nckgdOHfX0eH8D2mb8yJiyW8O', 'pedagang', NULL, 1, 4, NULL, '2024-07-25 18:33:32', '2024-07-30 22:59:05', 'Lamongan', '334', 'laki-laki', NULL),
+(13, 'Admin Kec Mantup', 'mantup@gmail.com', NULL, '$2y$12$qdAHccwJge3u4q79Lbeaq.qdKbfum/i8MUz8zV03YtbX7mUr92xPO', 'produsen', NULL, 2, 1, NULL, '2024-07-25 18:36:26', '2024-07-30 22:59:55', NULL, NULL, 'laki-laki', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Structure for view `laporan_grosir`
+-- Structure for view `laporan_grosir_pasar_tertentu`
 --
-DROP TABLE IF EXISTS `laporan_grosir`;
+DROP TABLE IF EXISTS `laporan_grosir_pasar_tertentu`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `laporan_grosir`  AS SELECT `hg`.`id_harga` AS `id_harga`, `p`.`nama_produk` AS `produk`, `ps`.`nama_pasar` AS `pasar`, concat('Rp. ',format(`hg`.`harga`,0)) AS `harga`, concat(format(`hg`.`pasokan`,0)) AS `pasokan`, `u`.`name` AS `pelapor`, `hg`.`tgl_pelaporan` AS `tgl_lapor`, dayname(`hg`.`tgl_pelaporan`) AS `hari`, `hg`.`tgl_entry` AS `tgl_entri`, `s1`.`nama_satuan` AS `satuan_harga`, `s2`.`nama_satuan` AS `satuan_pasokan` FROM (((((`harga_produk` `hg` join `produk` `p` on(`hg`.`id_produk` = `p`.`id_produk`)) join `users` `u` on(`hg`.`id_user` = `u`.`id`)) join `pasar` `ps` on(`u`.`id_pasar` = `ps`.`id_pasar`)) join `satuan` `s1` on(`hg`.`id_satuan_harga` = `s1`.`id_satuan`)) join `satuan` `s2` on(`hg`.`id_satuan_pasokan` = `s2`.`id_satuan`)) WHERE `hg`.`tipe_harga` = 'grosir' ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `laporan_harga_grosir`
---
-DROP TABLE IF EXISTS `laporan_harga_grosir`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `laporan_harga_grosir`  AS SELECT `p`.`nama_produk` AS `produk`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sidoharjo' then `hp`.`harga` else 0 end),0) AS `Psr_Sidoharjo`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Ikan' then `hp`.`harga` else 0 end),0) AS `Psr_Ikan`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Babat' then `hp`.`harga` else 0 end),0) AS `Psr_Babat`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Blimbing' then `hp`.`harga` else 0 end),0) AS `Psr_Blimbing`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sumberdadi' then `hp`.`harga` else 0 end),0) AS `Psr_Sumberdadi`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sendangrejo' then `hp`.`harga` else 0 end),0) AS `Psr_Sendangrejo`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sekaran' then `hp`.`harga` else 0 end),0) AS `Psr_Sekaran`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Lembung' then `hp`.`harga` else 0 end),0) AS `Psr_Lembung`, coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sukodadi' then `hp`.`harga` else 0 end),0) AS `Psr_Sukodadi`, round((coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sidoharjo' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Ikan' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Babat' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Blimbing' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sumberdadi' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sendangrejo' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sekaran' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Lembung' then `hp`.`harga` else 0 end),0) + coalesce(sum(case when `ps`.`nama_pasar` = 'Psr. Sukodadi' then `hp`.`harga` else 0 end),0)) / 9,0) AS `ratarata`, `hp`.`tgl_pelaporan` AS `tanggal` FROM (((`harga_produk` `hp` join `produk` `p` on(`hp`.`id_produk` = `p`.`id_produk`)) join `users` `u` on(`hp`.`id_user` = `u`.`id`)) join `pasar` `ps` on(`u`.`id_pasar` = `ps`.`id_pasar`)) WHERE `hp`.`tipe_harga` = 'grosir' GROUP BY `p`.`nama_produk`, `hp`.`tgl_pelaporan` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `laporan_grosir_pasar_tertentu`  AS SELECT `hp`.`id_harga` AS `id_harga`, `p`.`nama_produk` AS `produk`, `ps`.`nama_pasar` AS `pasar`, `hp`.`harga` AS `harga`, `hp`.`pasokan` AS `pasokan`, `u`.`name` AS `pelapor`, `hp`.`tgl_pelaporan` AS `tgl_lapor`, dayname(`hp`.`tgl_pelaporan`) AS `hari`, `hp`.`tgl_entry` AS `tgl_entri`, `sh`.`nama_satuan` AS `satuan_harga`, `sp`.`nama_satuan` AS `satuan_pasokan` FROM (((((`harga_produk` `hp` join `produk` `p` on(`hp`.`id_produk` = `p`.`id_produk`)) join `users` `u` on(`hp`.`id_user` = `u`.`id`)) join `pasar` `ps` on(`u`.`id_pasar` = `ps`.`id_pasar`)) join `satuan` `sh` on(`hp`.`id_satuan_harga` = `sh`.`id_satuan`)) join `satuan` `sp` on(`hp`.`id_satuan_pasokan` = `sp`.`id_satuan`)) WHERE `hp`.`tipe_harga` = 'grosir' ;
 
 -- --------------------------------------------------------
 
@@ -431,9 +578,7 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `harga_produk`
   ADD PRIMARY KEY (`id_harga`),
-  ADD KEY `id_user` (`id_user`,`id_satuan_harga`,`id_satuan_pasokan`),
-  ADD KEY `id_satuan_harga` (`id_satuan_harga`),
-  ADD KEY `id_satuan_pasokan` (`id_satuan_pasokan`),
+  ADD KEY `id_user` (`id_user`),
   ADD KEY `id_produk` (`id_produk`);
 
 --
@@ -453,7 +598,8 @@ ALTER TABLE `migrations`
 -- Indexes for table `pasar`
 --
 ALTER TABLE `pasar`
-  ADD PRIMARY KEY (`id_pasar`);
+  ADD PRIMARY KEY (`id_pasar`),
+  ADD UNIQUE KEY `nama_pasar` (`nama_pasar`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -506,7 +652,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `harga_produk`
 --
 ALTER TABLE `harga_produk`
-  MODIFY `id_harga` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_harga` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=325;
 
 --
 -- AUTO_INCREMENT for table `kecamatan`
@@ -524,7 +670,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `pasar`
 --
 ALTER TABLE `pasar`
-  MODIFY `id_pasar` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_pasar` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -536,7 +682,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `id_produk` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id_produk` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `satuan`
@@ -548,7 +694,7 @@ ALTER TABLE `satuan`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -558,8 +704,6 @@ ALTER TABLE `users`
 -- Constraints for table `harga_produk`
 --
 ALTER TABLE `harga_produk`
-  ADD CONSTRAINT `harga_produk_ibfk_1` FOREIGN KEY (`id_satuan_harga`) REFERENCES `satuan` (`id_satuan`),
-  ADD CONSTRAINT `harga_produk_ibfk_2` FOREIGN KEY (`id_satuan_pasokan`) REFERENCES `satuan` (`id_satuan`),
   ADD CONSTRAINT `harga_produk_ibfk_3` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `harga_produk_ibfk_4` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`);
 
