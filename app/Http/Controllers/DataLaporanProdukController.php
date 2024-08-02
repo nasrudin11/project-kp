@@ -175,13 +175,13 @@ class DataLaporanProdukController extends Controller
             // Ambil data rata-rata harga produsen untuk semua kecamatan
             $dataKecamatan = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_pasar')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_kecamatan')
                 ->where('harga_produk.tipe_harga', 'produsen')
                 ->where(function($query) {
                     $query->where('produk.target', 'Produsen')
                         ->orWhere('produk.target', 'Keduanya');
                 })
-                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
+                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan')
                 ->get()
                 ->groupBy('komoditi');
     
@@ -194,16 +194,15 @@ class DataLaporanProdukController extends Controller
                 'active_tab' => $activeTab
             ];
         } else {
-            // Ambil data detail harga produsen berdasarkan id_kecamatan
             $dataDetailProdusen = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
-                ->where('users.id_kecamatan', $idKecamatan)
-                ->whereMonth('harga_produk.tgl_entry', $currentMonth)
-                ->whereYear('harga_produk.tgl_entry', $currentYear)
-                ->where('harga_produk.tipe_harga', 'produsen')
-                ->select('harga_produk.*', 'produk.nama_produk')
-                ->get()
-                ->groupBy('produk.id_produk');
+            ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
+            ->where('users.id_kecamatan', $idKecamatan)
+            ->whereMonth('harga_produk.tgl_entry', $currentMonth)
+            ->whereYear('harga_produk.tgl_entry', $currentYear)
+            ->where('harga_produk.tipe_harga', 'produsen')
+            ->select('harga_produk.*', 'produk.nama_produk')
+            ->get()
+            ->groupBy('produk.id_produk');
 
     
             return [
