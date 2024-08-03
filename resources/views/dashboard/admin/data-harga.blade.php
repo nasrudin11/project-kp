@@ -17,6 +17,11 @@
 
     <div class="card shadow border-0 mt-4">
         <div class="card-body">
+
+            <a href="{{ route('form_laporan') }}" class="btn btn-sm btn-primary rounded-pill pe-3 ps-3 mb-4 shadow">
+                Input Data<i class="bi bi-plus-circle ms-2"></i>
+            </a>
+
             <!-- Tabs for Pasar and Kecamatan -->
             <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -105,6 +110,33 @@
     </div>
 </main>
 
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Harga</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editForm" method="POST" action="{{ route('update_harga_user') }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="harga" class="form-label">Harga</label>
+                        <input type="text" class="form-control" id="harga" name="harga" required>
+                        <input type="hidden" id="harga-id" name="id_harga">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Simpan tab aktif ke localStorage sebelum submit
@@ -134,6 +166,19 @@
 
             localStorage.removeItem('activeTab'); // Hapus setelah digunakan
         }
+
+        var editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var harga = button.getAttribute('data-harga');
+            var id = button.getAttribute('data-id');
+
+            var modalHargaInput = editModal.querySelector('#harga');
+            var modalIdInput = editModal.querySelector('#harga-id');
+
+            modalHargaInput.value = harga;
+            modalIdInput.value = id;
+        });
     });
 </script>
 

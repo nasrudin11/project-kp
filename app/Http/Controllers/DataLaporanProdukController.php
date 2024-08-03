@@ -129,7 +129,7 @@ class DataLaporanProdukController extends Controller
             $dataDetailPengecer = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
                 ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
                 ->where('users.id_pasar', $idPasar)
-                ->whereMonth('harga_produk.tgl_entry', $currentMonth)
+                // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
                 ->whereYear('harga_produk.tgl_entry', $currentYear)
                 ->where('harga_produk.tipe_harga', 'pengecer')
                 ->select('harga_produk.*', 'produk.nama_produk')
@@ -139,7 +139,7 @@ class DataLaporanProdukController extends Controller
             $dataDetailGrosir = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
                 ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
                 ->where('users.id_pasar', $idPasar)
-                ->whereMonth('harga_produk.tgl_entry', $currentMonth)
+                // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
                 ->whereYear('harga_produk.tgl_entry', $currentYear)
                 ->where('harga_produk.tipe_harga', 'grosir')
                 ->select('harga_produk.*', 'produk.nama_produk')
@@ -167,6 +167,7 @@ class DataLaporanProdukController extends Controller
         $currentMonthName = Carbon::now()->format('F Y');
         $currentYear = Carbon::now()->format('Y');
         $dates = $this->getWeeklyDates($currentMonth);
+
     
         // Ambil nilai active_tab dari request
         $activeTab = $request->get('active_tab', 'tab-pasar');
@@ -197,13 +198,11 @@ class DataLaporanProdukController extends Controller
             $dataDetailProdusen = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
             ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
             ->where('users.id_kecamatan', $idKecamatan)
-            ->whereMonth('harga_produk.tgl_entry', $currentMonth)
             ->whereYear('harga_produk.tgl_entry', $currentYear)
             ->where('harga_produk.tipe_harga', 'produsen')
             ->select('harga_produk.*', 'produk.nama_produk')
             ->get()
             ->groupBy('produk.id_produk');
-
     
             return [
                 'dataDetailProdusen' => $dataDetailProdusen,
@@ -233,10 +232,6 @@ class DataLaporanProdukController extends Controller
             'active_tab' => $activeTab
         ]);
     }
-    
-
-    
-
 
     public function index_harga_user(Request $request)
     {
@@ -340,8 +335,7 @@ class DataLaporanProdukController extends Controller
             'currentMonthName' => $currentMonthName,
             'title' => 'Data Pasokan'
         ]);
-    }
-    
+    }   
     
     private function getWeeklyDates($month)
     {
