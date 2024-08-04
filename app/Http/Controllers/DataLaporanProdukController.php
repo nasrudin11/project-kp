@@ -74,6 +74,65 @@ class DataLaporanProdukController extends Controller
         ]);
     }
 
+    public function index_pasokan(Request $request)
+    {
+        $pasars = Pasar::all();
+        $kecamatans = Kecamatan::all();
+
+        $currentMonth = Carbon::now()->format('m');
+        $currentMonthName = Carbon::now()->format('F Y');
+        $dates = $this->getWeeklyDates($currentMonth);
+
+        $idPasar = $request->get('id_pasar', 'semua');
+        $idKecamatan = $request->get('id_kecamatan', 'semua');
+        $activeTab = $request->get('active_tab', 'tab-pasar');
+
+        // Initialize data variables
+        $dataPengecer = $dataGrosir = $dataDetailPengecer = $dataDetailGrosir = $dataKecamatan = $dataDetailProdusen = null;
+
+            if ($idPasar == 'semua') {
+                // Call the private method for Pasar
+                $data = $this->getDataPasar($request);
+                $dataPengecer = $data['dataPengecer'] ?? null;
+                $dataGrosir = $data['dataGrosir'] ?? null;
+                $activeTab == 'tab-pasar';
+
+
+            } elseif($idPasar != 'semua') {
+                // Call the private method for Pasar with detail
+                $dataDetail = $this->getDataPasar($request);
+                $dataDetailPengecer = $dataDetail['dataDetailPengecer'] ?? null;
+                $dataDetailGrosir = $dataDetail['dataDetailGrosir'] ?? null;
+                $activeTab == 'tab-pasar';
+            }
+
+            if ($idKecamatan == 'semua') {
+                // Call the private method for Kecamatan
+                $dataKecamatan = $this->getDataKecamatan($request)['dataKecamatan'] ?? null;
+                $activeTab == 'tab-kecamatan';
+            } elseif($idKecamatan != 'semua') {
+                // Call the private method for Kecamatan with detail
+                $dataDetailProdusen = $this->getDataKecamatan($request)['dataDetailProdusen'] ?? null;
+                $activeTab == 'tab-kecamatan';
+            }
+
+        return view('dashboard.admin.data-pasokan', [
+            'pasars' => $pasars,
+            'kecamatans' => $kecamatans,
+            'id_pasar' => $idPasar,
+            'id_kecamatan' => $idKecamatan,
+            'dataPengecer' => $dataPengecer,
+            'dataGrosir' => $dataGrosir,
+            'dataDetailPengecer' => $dataDetailPengecer,
+            'dataDetailGrosir' => $dataDetailGrosir,
+            'dataProdusen' => $dataKecamatan,
+            'dataDetailProdusen' => $dataDetailProdusen,
+            'dates' => $dates,
+            'currentMonthName' => $currentMonthName,
+            'active_tab' => $activeTab,
+            'title' => 'Data Harga'
+        ]);
+    }
 
     private function getDataPasar(Request $request)
     {
@@ -92,26 +151,27 @@ class DataLaporanProdukController extends Controller
             // Rata-rata harga pengecer
             $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_pasar')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan','users.id_pasar')
                 ->where('harga_produk.tipe_harga', 'pengecer')
                 ->where(function($query) {
                     $query->where('produk.target', 'Pedagang')
                         ->orWhere('produk.target', 'Keduanya');
                 })
-                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
+                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
                 ->get()
                 ->groupBy('komoditi');
+
 
             // Rata-rata harga grosir
             $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_pasar')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi','harga_produk.pasokan', 'users.id_pasar')
                 ->where('harga_produk.tipe_harga', 'grosir')
                 ->where(function($query) {
                     $query->where('produk.target', 'Pedagang')
                         ->orWhere('produk.target', 'Keduanya');
                 })
-                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
+                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
                 ->get()
                 ->groupBy('komoditi');
 
@@ -176,13 +236,13 @@ class DataLaporanProdukController extends Controller
             // Ambil data rata-rata harga produsen untuk semua kecamatan
             $dataKecamatan = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_kecamatan')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'),'harga_produk.pasokan', 'users.id_kecamatan')
                 ->where('harga_produk.tipe_harga', 'produsen')
                 ->where(function($query) {
                     $query->where('produk.target', 'Produsen')
                         ->orWhere('produk.target', 'Keduanya');
                 })
-                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan')
+                ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan', 'harga_produk.pasokan')
                 ->get()
                 ->groupBy('komoditi');
     
@@ -215,22 +275,169 @@ class DataLaporanProdukController extends Controller
         }
     }
 
+    // private function DataPasokanPasar(Request $request)
+    // {
+    //     $idPasar = $request->get('id_pasar', 'semua');
+    //     $pasars = Pasar::all();
+    //     $kecamatans = Kecamatan::all();
+    //     $currentMonth = Carbon::now()->format('m');
+    //     $currentMonthName = Carbon::now()->format('F Y');
+    //     $currentYear = Carbon::now()->format('Y');
+    //     $dates = $this->getWeeklyDates($currentMonth);
+
+    //     // Ambil nilai active_tab dari request
+    //     $activeTab = $request->get('active_tab', 'tab-pasar');
+
+    //     if ($idPasar === 'semua') {
+    //         // Rata-rata harga pengecer
+    //         $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan', 'users.id_pasar')
+    //             ->where('harga_produk.tipe_harga', 'pengecer')
+    //             ->where(function($query) {
+    //                 $query->where('produk.target', 'Pedagang')
+    //                     ->orWhere('produk.target', 'Keduanya');
+    //             })
+    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
+    //             ->get()
+    //             ->groupBy('komoditi');
+
+    //         // Rata-rata harga grosir
+    //         $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan', 'users.id_pasar')
+    //             ->where('harga_produk.tipe_harga', 'grosir')
+    //             ->where(function($query) {
+    //                 $query->where('produk.target', 'Pedagang')
+    //                     ->orWhere('produk.target', 'Keduanya');
+    //             })
+    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
+    //             ->get()
+    //             ->groupBy('komoditi');
+
+    //         return [
+    //             'dataPengecer' => $dataPengecer,
+    //             'dataGrosir' => $dataGrosir,
+    //             'pasars' => $pasars,
+    //             'kecamatans' => $kecamatans,
+    //             'currentMonthName' => $currentMonthName,
+    //             'dates' => $dates,
+    //             'active_tab' => $activeTab
+    //         ];
+    //     } else {
+    //         // Data harga pasar detail berdasarkan id_pasar
+    //         $dataDetailPengecer = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //             ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
+    //             ->where('users.id_pasar', $idPasar)
+    //             // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
+    //             ->whereYear('harga_produk.tgl_entry', $currentYear)
+    //             ->where('harga_produk.tipe_harga', 'pengecer')
+    //             ->select('harga_produk.*', 'produk.nama_produk')
+    //             ->get()
+    //             ->groupBy('produk.id_produk');
+
+    //         $dataDetailGrosir = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //             ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
+    //             ->where('users.id_pasar', $idPasar)
+    //             // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
+    //             ->whereYear('harga_produk.tgl_entry', $currentYear)
+    //             ->where('harga_produk.tipe_harga', 'grosir')
+    //             ->select('harga_produk.*', 'produk.nama_produk')
+    //             ->get()
+    //             ->groupBy('produk.id_produk');
+
+    //         return [
+    //             'dataDetailPengecer' => $dataDetailPengecer,
+    //             'dataDetailGrosir' => $dataDetailGrosir,
+    //             'pasars' => $pasars,
+    //             'kecamatans' => $kecamatans,
+    //             'currentMonthName' => $currentMonthName,
+    //             'dates' => $dates,
+    //             'active_tab' => $activeTab
+    //         ];
+    //     }
+    // }
+
+    // private function DataKecamatan(Request $request)
+    // {
+    //     $idKecamatan = $request->get('id_kecamatan', 'semua');
+    //     $pasars = Pasar::all();
+    //     $kecamatans = Kecamatan::all();
+    //     $currentMonth = Carbon::now()->format('m');
+    //     $currentMonthName = Carbon::now()->format('F Y');
+    //     $currentYear = Carbon::now()->format('Y');
+    //     $dates = $this->getWeeklyDates($currentMonth);
+
+    
+    //     // Ambil nilai active_tab dari request
+    //     $activeTab = $request->get('active_tab', 'tab-pasar');
+    
+    //     if ($idKecamatan === 'semua') {
+    //         // Ambil data rata-rata harga produsen untuk semua kecamatan
+    //         $dataKecamatan = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_kecamatan')
+    //             ->where('harga_produk.tipe_harga', 'produsen')
+    //             ->where(function($query) {
+    //                 $query->where('produk.target', 'Produsen')
+    //                     ->orWhere('produk.target', 'Keduanya');
+    //             })
+    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan')
+    //             ->get()
+    //             ->groupBy('komoditi');
+    
+    //         return [
+    //             'dataKecamatan' => $dataKecamatan,
+    //             'pasars' => $pasars,
+    //             'kecamatans' => $kecamatans,
+    //             'currentMonthName' => $currentMonthName,
+    //             'dates' => $dates,
+    //             'active_tab' => $activeTab
+    //         ];
+    //     } else {
+    //         $dataDetailProdusen = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+    //         ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
+    //         ->where('users.id_kecamatan', $idKecamatan)
+    //         ->whereYear('harga_produk.tgl_entry', $currentYear)
+    //         ->where('harga_produk.tipe_harga', 'produsen')
+    //         ->select('harga_produk.*', 'produk.nama_produk')
+    //         ->get()
+    //         ->groupBy('produk.id_produk');
+    
+    //         return [
+    //             'dataDetailProdusen' => $dataDetailProdusen,
+    //             'pasars' => $pasars,
+    //             'kecamatans' => $kecamatans,
+    //             'currentMonthName' => $currentMonthName,
+    //             'dates' => $dates,
+    //             'active_tab' => $activeTab
+    //         ];
+    //     }
+    // }
+
     public function handleData(Request $request)
     {
         // Mengambil data dari permintaan
         $idPasar = $request->get('id_pasar', 'semua');
         $idKecamatan = $request->get('id_kecamatan', 'semua');
         $activeTab = $request->get('active_tab', 'tab-pasar');
+        $tipe = $request->input('tipe');
 
-        // Memanggil metode privat untuk mengolah data
-        $data = $this->getDataPasar($request);
-
-        // Mengarahkan kembali dengan query string
-        return redirect()->route('admin-dashboard.data-harga', [
-            'id_pasar' => $idPasar,
-            'id_kecamatan' => $idKecamatan,
-            'active_tab' => $activeTab
-        ]);
+        if($tipe == 'harga'){
+            // Mengarahkan kembali dengan query string
+            return redirect()->route('admin-dashboard.data-harga', [
+                'id_pasar' => $idPasar,
+                'id_kecamatan' => $idKecamatan,
+                'active_tab' => $activeTab
+            ]);
+        }else{
+            return redirect()->route('admin-dashboard.data-pasokan', [
+                'id_pasar' => $idPasar,
+                'id_kecamatan' => $idKecamatan,
+                'active_tab' => $activeTab
+            ]);
+        }
+        
     }
 
     public function index_harga_user(Request $request)
@@ -373,6 +580,94 @@ class DataLaporanProdukController extends Controller
         return view('dashboard.user.form-laporan', compact('produkList'))->with('title', $title);
     }
 
+    public function form_input(Request $request)
+    {
+        $tipe = $request->get('tipe');
+        if ($tipe == 'pedagang') {
+            $produkList = Produk::whereIn('target', ['Pedagang', 'Keduanya'])->get();
+            $selectList = Pasar::all();
+            $title = 'Form Pedagang';
+        } elseif ($tipe == 'produsen') {
+            $produkList = Produk::whereIn('target', ['Produsen', 'Keduanya'])->get();
+            $selectList = Kecamatan::all();
+            $title = 'Form Produsen';
+        } else {          
+            return redirect()->back()->with('error', 'Role tidak dikenal');
+        }
+
+        return view('dashboard.admin.form-laporan', compact('produkList', 'tipe', 'selectList'))->with('title', $title);
+    }
+
+    public function store_admin(Request $request)
+    {
+        $request->validate([
+            'data.*.id_produk' => 'required|exists:produk,id_produk',
+            'data.*.harga' => 'nullable|numeric',
+            'data.*.pasokan' => 'nullable|numeric',
+            'data.*.satuan_harga' => 'nullable|string',
+            'data.*.satuan_pasokan' => 'nullable|string',
+            'tipe_harga' => 'required|in:pengecer,grosir,produsen',
+            'tgl_entry' => 'required',
+            'id_pasar' => 'nullable|exists:pasar,id_pasar',
+            'id_kecamatan' => 'nullable|exists:kecamatan,id_kecamatan',
+        ]);
+    
+        $tglLaporan = Carbon::now()->format('Y-m-d');
+    
+        // Initialize id_user variable
+        $id_user = null;
+    
+        if ($request->input('tipe_harga') == 'pengecer' || $request->input('tipe_harga') == 'grosir') {
+            // Retrieve id_user based on id_pasar
+            $id_pasar = $request->input('id_pasar');
+            $user = DB::table('users')
+                ->join('pasar', 'users.id_pasar', '=', 'pasar.id_pasar')
+                ->where('pasar.id_pasar', $id_pasar)
+                ->select('users.id')
+                ->first();
+    
+            if ($user) {
+                $id_user = $user->id;
+            } else {
+                return redirect()->back()->with('error', 'User not found for the provided Pasar.');
+            }
+        } elseif ($request->input('tipe_harga') == 'produsen') {
+            // Retrieve id_user based on id_kecamatan
+            $id_kecamatan = $request->input('id_kecamatan');
+            $user = DB::table('users')
+                ->join('kecamatan', 'users.id_kecamatan', '=', 'kecamatan.id_kecamatan')
+                ->where('kecamatan.id_kecamatan', $id_kecamatan)
+                ->select('users.id')
+                ->first();
+
+            // dd($user);
+    
+            if ($user) {
+                $id_user = $user->id;
+            } else {
+                return redirect()->back()->with('error', 'User not found for the provided Kecamatan.');
+            }
+        }
+    
+        // Insert data into harga_produk table
+        $data = $request->input('data', []);
+        foreach ($data as $item) {
+            DB::table('harga_produk')->insert([
+                'id_user' => $id_user,
+                'id_produk' => $item['id_produk'],
+                'harga' => $item['harga'] ?? 0,
+                'pasokan' => $item['pasokan'] ?? 0,
+                'satuan_harga' => $item['satuan_harga'] ?? 'Kg',
+                'satuan_pasokan' => $item['satuan_pasokan'] ?? 'Kg',
+                'tgl_entry' => $request->input('tgl_entry'),
+                'tgl_pelaporan' => $tglLaporan,
+                'tipe_harga' => $request->input('tipe_harga'),
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'Data berhasil disimpan!');
+    }  
+
     public function store(Request $request)
     {
         $request->validate([
@@ -423,7 +718,7 @@ class DataLaporanProdukController extends Controller
         return redirect()->back()->with('success', 'Data berhasil disimpan!');
     }
     
-    public function update_harga_user(Request $request)
+    public function update_harga(Request $request)
     {
 
         $request->validate([
@@ -442,6 +737,23 @@ class DataLaporanProdukController extends Controller
         return redirect()->back()->with('success', 'Harga berhasil diperbarui.!');
     }
 
-    
+    public function update_pasokan(Request $request)
+    {
 
+        $request->validate([
+            'id_harga' => 'required|exists:harga_produk,id_harga',
+            'pasokan' => 'required|numeric|min:0',
+        ]);
+
+        // Temukan harga berdasarkan ID
+        $pasokan = HargaProduk::findOrFail($request->input('id_harga'));
+
+        // Update harga
+        $pasokan->pasokan = $request->input('pasokan');
+        $pasokan->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Harga berhasil diperbarui.!');
+    }
+    
 }

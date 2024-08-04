@@ -1,7 +1,7 @@
 @extends('layouts.log-main')
 
 @section('content')
-<div class="container mt-4">
+<div class="container mt-3">
 
     @include('partials.log-navbar')
 

@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <main class="container mt-4">
+    <main class="container mt-3">
 
         @include('partials.log-navbar')
 

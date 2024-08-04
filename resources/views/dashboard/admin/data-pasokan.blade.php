@@ -1,313 +1,212 @@
 @extends('layouts.log-main')
 
 @section('content')
-<main class="container mt-4">
+<main class="container mt-3">
     @include('partials.log-navbar')
 
-    <div class="container d-flex align-items-center justify-content-between mt-4">
+    <div class="container d-flex justify-content-between align-items-center mt-4">
         <h4>{{ $title }}</h4>
-    
+
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
                 <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Data Pasokan</li>
+                <li class="breadcrumb-item active" aria-current="page">Data Akun</li>
             </ol>
-        </nav>
+        </nav>       
     </div>
-    
+
+    @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="card shadow border-0 mt-4">
         <div class="card-body">
 
-            <div class="d-flex">
-                <!-- Dropdown Menu -->
-                <div class="dropdown mb-4 me-2">
-                    <button class="btn btn-sm btn-primary dropdown-toggle rounded-pill pe-3 ps-3 mb-2 shadow" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Pilih Tipe
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#" id="option-pedagang">Pedagang</a></li>
-                        <li><a class="dropdown-item" href="#" id="option-produsen">Produsen</a></li>
-                    </ul>
-                </div>
-
-                <!-- Dropdown Menu Lanjutan -->
-                <div class="dropdown mb-4 me-2">
-                    <button class="btn btn-sm btn-primary dropdown-toggle rounded-pill pe-3 ps-3 mb-2 shadow" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Pilih Pasar
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#" id="option-pedagang">Pasar Babat</a></li>
-                        <li><a class="dropdown-item" href="#" id="option-produsen">Pasar Ikan</a></li>
-                    </ul>
-                </div>
-
-                <div class="dropdown mb-4">
-                    <button class="btn btn-sm btn-primary dropdown-toggle rounded-pill pe-3 ps-3 mb-2 shadow" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Pilih Kecamatan
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#" id="option-pedagang">Modo</a></li>
-                        <li><a class="dropdown-item" href="#" id="option-produsen">Sidoarjo</a></li>
-                    </ul>
-                </div>
-            </div>
-
-
-
-            <!-- Tabs and Data Section -->
-            <div id="content-pedagang">
-                <ul class="nav nav-tabs mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="tab-pengecer" href="#">Pengecer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="tab-grosir" href="#">Grosir</a>
-                    </li>
+            <div class="dropdown">
+                <button class="btn btn-sm btn-primary rounded-pill pe-3 ps-3 mb-4 shadow" type="button" id="inputDataDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Input Data <i class="bi bi-plus-circle ms-2"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="inputDataDropdown">
+                    <li><a class="dropdown-item" href="{{ route('form.input.laporan', ['tipe' => 'pedagang']) }}">Pedagang</a></li>
+                    <li><a class="dropdown-item" href="{{ route('form.input.laporan', ['tipe' => 'produsen']) }}">Produsen</a></li>
                 </ul>
+            </div>
+            
 
-                <div id="data-pengecer">
-                    <h4 class="text-center mt-4">Data Pasokan Pangan Tingkat Pedagang Pengecer</h4>
-                    <table class="table table-bordered table-hover text-center mt-4">
-                        <thead class="table-primary align-middle">
-                            <tr>
-                                <th rowspan="3">NO</th>
-                                <th rowspan="3">KOMODITI</th>
-                                <th colspan="10">HARGA (Kg)</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2">Minggu 1 (Kg)</th>
-                                <th colspan="2">Minggu 2 (Kg)</th>
-                                <th colspan="2">Minggu 3 (Kg)</th>
-                                <th colspan="2">Minggu 4 (Kg)</th>
-                                <th colspan="2">Minggu 5 (Kg)</th>
-                            </tr>
-                            <tr>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Beras Premium</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Beras</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Tabs for Pasar and Kecamatan -->
+            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ $active_tab == 'tab-pasar' ? 'active' : '' }}" id="tab-pasar" data-bs-toggle="tab" href="#content-pasar" role="tab" aria-controls="content-pasar" aria-selected="{{ $active_tab == 'tab-pasar' ? 'true' : 'false' }}">Pasar</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ $active_tab == 'tab-kecamatan' ? 'active' : '' }}" id="tab-kecamatan" data-bs-toggle="tab" href="#content-kecamatan" role="tab" aria-controls="content-kecamatan" aria-selected="{{ $active_tab == 'tab-kecamatan' ? 'true' : 'false' }}">Kecamatan</a>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="myTabContent">
+                <!-- Content for Pasar -->
+                <div class="tab-pane fade {{ $active_tab == 'tab-pasar' ? 'show active' : '' }}" id="content-pasar" role="tabpanel" aria-labelledby="tab-pasar">
+                    <div id="data-pasar">
+                        <!-- Select Dropdown for Pasar -->
+                        <div class="mb-4">
+                            <form action="{{ route('handle-data') }}" method="POST" id="form-pasar">
+                                @csrf
+                                <input type="hidden" name="active_tab" value="tab-pasar">
+                                <input type="hidden" name="tipe" value="pasokan">
+                                <label for="select-pasar" class="form-label">Pilih Pasar:</label>
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <select class="form-select w-auto" id="select-pasar" name="id_pasar">
+                                            <option value="semua" {{ $id_pasar == 'semua' ? 'selected' : '' }}>Semua</option>
+                                            @foreach ($pasars as $pasar)
+                                                <option value="{{ $pasar->id_pasar }}" {{ $id_pasar == $pasar->id_pasar ? 'selected' : '' }}>{{ $pasar->nama_pasar }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                        
+                            @if($id_pasar == 'semua')
+                                @include('partials.tabel.pasokan.data-pasar-ratarata', [
+                                    'dataPengecer' => $dataPengecer,
+                                    'dataGrosir' => $dataGrosir,
+                                    'pasars' => $pasars
+                                ])
+                            @elseif($id_pasar != 'semua')
+                                @include('partials.tabel.pasokan.data-pasar-detail', [
+                                    'dataDetailPengecer' => $dataDetailPengecer,
+                                    'dataDetailGrosir' => $dataDetailGrosir,
+                                    'dates' => $dates,
+                                    'currentMonthName' => $currentMonthName
+                                ])
+                            @endif
+
+                    </div>
                 </div>
 
-                <div id="data-grosir" class="d-none">
-                    <h4 class="text-center mt-4">Data Pasokan Pangan Tingkat Pedagang Grosir</h4>
-                    <!-- Tabel Data Grosir -->
-                    <table class="table table-bordered table-hover text-center mt-4">
-                        <thead class="table-primary align-middle">
-                            <tr>
-                                <th rowspan="3">NO</th>
-                                <th rowspan="3">KOMODITI</th>
-                                <th colspan="10">HARGA (Kg)</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2">Minggu 1 (Kg)</th>
-                                <th colspan="2">Minggu 2 (Kg)</th>
-                                <th colspan="2">Minggu 3 (Kg)</th>
-                                <th colspan="2">Minggu 4 (Kg)</th>
-                                <th colspan="2">Minggu 5 (Kg)</th>
-                            </tr>
-                            <tr>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                                <th>Senin</th>
-                                <th>Kamis</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Beras Premium</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Beras</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Content for Kecamatan -->
+                <div class="tab-pane fade {{ $active_tab == 'tab-kecamatan' ? 'show active' : '' }}" id="content-kecamatan" role="tabpanel" aria-labelledby="tab-kecamatan">
+                    <div id="data-kecamatan">
+                        <!-- Select Dropdown for Kecamatan -->
+                        <div class="mb-4">
+                            <form action="{{ route('handle-data') }}" method="POST" id="form-kecamatan">
+                                @csrf
+                                <input type="hidden" name="active_tab" value="tab-kecamatan">
+                                <input type="hidden" name="tipe" value="pasokan">
+                                <label for="select-kecamatan" class="form-label">Pilih Kecamatan:</label>
+
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <select class="form-select w-auto" id="select-kecamatan" name="id_kecamatan">
+                                            <option value="semua" {{ $id_kecamatan == 'semua' ? 'selected' : '' }}>Semua</option>
+                                            @foreach ($kecamatans as $kecamatan)
+                                                <option value="{{ $kecamatan->id_kecamatan }}" {{ $id_kecamatan == $kecamatan->id_kecamatan ? 'selected' : '' }}>{{ $kecamatan->nama_kecamatan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            </form>
+                        </div>
+
+                            @if($id_kecamatan == 'semua')
+                                @include('partials.tabel.pasokan.data-kecamatan-ratarata', [
+                                    'dataProdusen' => $dataProdusen,
+                                    'kecamatans' => $kecamatans
+                                ])
+                            @elseif($id_kecamatan != 'semua')
+                                @include('partials.tabel.pasokan.data-kecamatan-detail', [
+                                    'dataDetailProdusen' => $dataDetailProdusen,
+                                    'dates' => $dates,
+                                    'currentMonthName' => $currentMonthName
+                                ])
+                            @endif
+
+                    </div>
                 </div>
             </div>
-
-            <div id="content-produsen" class="d-none">
-                <ul class="nav nav-tabs mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="tab-produsen" href="#">Produsen</a>
-                    </li>
-                </ul>
-
-                <h4 class="text-center mt-4">Data Pasokan Pangan Tingkat Produsen</h4>
-                <table class="table table-bordered table-hover text-center mt-4">
-                    <thead class="table-primary align-middle">
-                        <tr>
-                            <th rowspan="3">NO</th>
-                            <th rowspan="3">KOMODITI</th>
-                            <th colspan="10">HARGA (Kg)</th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">Minggu 1 (Kg)</th>
-                            <th colspan="2">Minggu 2 (Kg)</th>
-                            <th colspan="2">Minggu 3 (Kg)</th>
-                            <th colspan="2">Minggu 4 (Kg)</th>
-                            <th colspan="2">Minggu 5 (Kg)</th>
-                        </tr>
-                        <tr>
-                            <th>Senin</th>
-                            <th>Kamis</th>
-                            <th>Senin</th>
-                            <th>Kamis</th>
-                            <th>Senin</th>
-                            <th>Kamis</th>
-                            <th>Senin</th>
-                            <th>Kamis</th>
-                            <th>Senin</th>
-                            <th>Kamis</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Gabah Kering Giling (GKG)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Gabah Basah Giling (GBG)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
     </div>
 </main>
 
-<!-- JavaScript -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const optionPedagang = document.getElementById('option-pedagang');
-        const optionProdusen = document.getElementById('option-produsen');
-        const contentPedagang = document.getElementById('content-pedagang');
-        const contentProdusen = document.getElementById('content-produsen');
-        const tabPengecer = document.getElementById('tab-pengecer');
-        const tabGrosir = document.getElementById('tab-grosir');
-        const dataPengecer = document.getElementById('data-pengecer');
-        const dataGrosir = document.getElementById('data-grosir');
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Harga</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editForm" method="POST" action="{{ route('update_pasokan') }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="pasokan" class="form-label">Harga</label>
+                        <input type="number" class="form-control" id="pasokan" name="pasokan" required>
+                        <input type="hidden" id="harga-id" name="id_harga">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-        function showContent(contentToShow) {
-            if (contentToShow === 'pedagang') {
-                contentPedagang.classList.remove('d-none');
-                contentProdusen.classList.add('d-none');
-            } else if (contentToShow === 'produsen') {
-                contentPedagang.classList.add('d-none');
-                contentProdusen.classList.remove('d-none');
-            }
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Simpan tab aktif ke localStorage sebelum submit
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                var activeTab = document.querySelector('.nav-tabs .nav-link.active').getAttribute('id');
+                localStorage.setItem('activeTab', activeTab);
+            });
+        });
+
+        // Memulihkan tab aktif setelah halaman dimuat
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
+                link.classList.remove('active');
+                link.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.tab-pane').forEach(tabPane => {
+                tabPane.classList.remove('show', 'active');
+            });
+
+            var activeLink = document.getElementById(activeTab);
+            activeLink.classList.add('active');
+            activeLink.setAttribute('aria-selected', 'true');
+            var tabContentId = activeLink.getAttribute('href');
+            document.querySelector(tabContentId).classList.add('show', 'active');
+
+            localStorage.removeItem('activeTab'); // Hapus setelah digunakan
         }
 
-        optionPedagang.addEventListener('click', function (e) {
-            e.preventDefault();
-            showContent('pedagang');
-        });
+        var editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var pasokan = button.getAttribute('data-pasokan');
+            var id = button.getAttribute('data-id');
 
-        optionProdusen.addEventListener('click', function (e) {
-            e.preventDefault();
-            showContent('produsen');
-        });
+            var modalPasokanInput = editModal.querySelector('#pasokan');
+            var modalIdInput = editModal.querySelector('#harga-id');
 
-        tabPengecer.addEventListener('click', function (e) {
-            e.preventDefault();
-            dataPengecer.classList.remove('d-none');
-            dataGrosir.classList.add('d-none');
-            tabPengecer.classList.add('active');
-            tabGrosir.classList.remove('active');
+            modalPasokanInput.value = pasokan;
+            modalIdInput.value = id;
         });
-
-        tabGrosir.addEventListener('click', function (e) {
-            e.preventDefault();
-            dataPengecer.classList.add('d-none');
-            dataGrosir.classList.remove('d-none');
-            tabGrosir.classList.add('active');
-            tabPengecer.classList.remove('active');
-        });
-
-        // Initial state
-        showContent('pedagang');
     });
 </script>
+
 @endsection

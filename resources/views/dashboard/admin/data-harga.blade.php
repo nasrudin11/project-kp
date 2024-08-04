@@ -15,12 +15,26 @@
         </nav>       
     </div>
 
+    @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card shadow border-0 mt-4">
         <div class="card-body">
 
-            <a href="{{ route('form_laporan') }}" class="btn btn-sm btn-primary rounded-pill pe-3 ps-3 mb-4 shadow">
-                Input Data<i class="bi bi-plus-circle ms-2"></i>
-            </a>
+            <div class="dropdown">
+                <button class="btn btn-sm btn-primary rounded-pill pe-3 ps-3 mb-4 shadow" type="button" id="inputDataDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Input Data <i class="bi bi-plus-circle ms-2"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="inputDataDropdown">
+                    <li><a class="dropdown-item" href="{{ route('form.input.laporan', ['tipe' => 'pedagang']) }}">Pedagang</a></li>
+                    <li><a class="dropdown-item" href="{{ route('form.input.laporan', ['tipe' => 'produsen']) }}">Produsen</a></li>
+                </ul>
+            </div>
+            
 
             <!-- Tabs for Pasar and Kecamatan -->
             <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -43,13 +57,19 @@
                                 @csrf
                                 <input type="hidden" name="active_tab" value="tab-pasar">
                                 <label for="select-pasar" class="form-label">Pilih Pasar:</label>
-                                <select class="form-select w-auto" id="select-pasar" name="id_pasar">
-                                    <option value="semua" {{ $id_pasar == 'semua' ? 'selected' : '' }}>Pilih Pasar</option>
-                                    @foreach ($pasars as $pasar)
-                                        <option value="{{ $pasar->id_pasar }}" {{ $id_pasar == $pasar->id_pasar ? 'selected' : '' }}>{{ $pasar->nama_pasar }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <select class="form-select w-auto" id="select-pasar" name="id_pasar">
+                                            <option value="semua" {{ $id_pasar == 'semua' ? 'selected' : '' }}>Semua</option>
+                                            @foreach ($pasars as $pasar)
+                                                <option value="{{ $pasar->id_pasar }}" {{ $id_pasar == $pasar->id_pasar ? 'selected' : '' }}>{{ $pasar->nama_pasar }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                
                             </form>
                         </div>
                         
@@ -80,13 +100,18 @@
                                 @csrf
                                 <input type="hidden" name="active_tab" value="tab-kecamatan">
                                 <label for="select-kecamatan" class="form-label">Pilih Kecamatan:</label>
-                                <select class="form-select w-auto" id="select-kecamatan" name="id_kecamatan">
-                                    <option value="semua" {{ $id_kecamatan == 'semua' ? 'selected' : '' }}>Pilih Kecamatan</option>
-                                    @foreach ($kecamatans as $kecamatan)
-                                        <option value="{{ $kecamatan->id_kecamatan }}" {{ $id_kecamatan == $kecamatan->id_kecamatan ? 'selected' : '' }}>{{ $kecamatan->nama_kecamatan }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <select class="form-select w-auto" id="select-kecamatan" name="id_kecamatan">
+                                            <option value="semua" {{ $id_kecamatan == 'semua' ? 'selected' : '' }}>Semua</option>
+                                            @foreach ($kecamatans as $kecamatan)
+                                                <option value="{{ $kecamatan->id_kecamatan }}" {{ $id_kecamatan == $kecamatan->id_kecamatan ? 'selected' : '' }}>{{ $kecamatan->nama_kecamatan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
                             </form>
                         </div>
 
@@ -118,7 +143,7 @@
                 <h5 class="modal-title" id="editModalLabel">Edit Harga</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editForm" method="POST" action="{{ route('update_harga_user') }}">
+            <form id="editForm" method="POST" action="{{ route('update_harga') }}">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">

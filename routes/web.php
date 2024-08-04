@@ -31,11 +31,9 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::get('/dashboard/data-pasokan', [DataLaporanProdukController::class, 'index_pasokan_user']);
     Route::get('/dashboard/data-harga/form_input', [DataLaporanProdukController::class, 'form_input_data'])->name('form_laporan');
     Route::post('/dashboard/data-harga/store', [DataLaporanProdukController::class, 'store'])->name('data.input.store');
-    Route::put('/harga/update', [DataLaporanProdukController::class, 'update_harga_user'])->name('update_harga_user');
-    
-    Route::get('/data-pasokan', function (){
-        return view('/dashboard/user/data-pasokan', ['title' => 'Data Produk']);
-    });
+    Route::put('/harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga_user');
+    Route::put('/pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan_user');
+
     
     Route::get('dashboard/profile', function (){
         return view('/dashboard/user/profile', ['title' => 'Profile']);
@@ -79,12 +77,18 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     // Route untuk menangani permintaan data
     Route::post('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'handleData'])->name('handle-data');
 
+    Route::get('/admin-dashboard/data-harga/form', [DataLaporanProdukController::class, 'form_input'])->name('form.input.laporan');
+    Route::post('/dashboard/data-harga/store', [DataLaporanProdukController::class, 'store_admin'])->name('laporan.store');
+    Route::put('/harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga');
+    Route::put('/pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan');
+
 
 
     // Data Pasokan
-    Route::get('/admin-dashboard/data-pasokan', function (){
-        return view('/dashboard/admin/data-pasokan', ['title' => 'Data Pasokan']);
-    });
+    Route::get('/admin-dashboard/data-pasokan', [DataLaporanProdukController::class, 'index_pasokan'])->name('admin-dashboard.data-pasokan');
+    // Route::get('/admin-dashboard/data-pasokan', function (){
+    //     return view('/dashboard/admin/data-pasokan', ['title' => 'Data Pasokan']);
+    // });
 
     // Lihat dan Update Profile Administrator
     Route::get('/admin-dashboard/profile', function (){

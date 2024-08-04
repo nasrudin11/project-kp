@@ -270,7 +270,6 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var editModal = document.getElementById('editModal');
