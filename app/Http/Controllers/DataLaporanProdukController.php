@@ -742,7 +742,7 @@ class DataLaporanProdukController extends Controller
 
         $request->validate([
             'id_harga' => 'required|exists:harga_produk,id_harga',
-            'pasokan' => 'required|numeric|min:0',
+            'pasokan' => 'required|numeric',
         ]);
 
         // Temukan harga berdasarkan ID

@@ -7,9 +7,10 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DataLaporanProdukController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\DataLaporanProdukController;
 
 Route::get('/', function () {
     return view('/layouts/main',  ['title' => 'Home Page']);
@@ -31,8 +32,8 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::get('/dashboard/data-pasokan', [DataLaporanProdukController::class, 'index_pasokan_user']);
     Route::get('/dashboard/data-harga/form_input', [DataLaporanProdukController::class, 'form_input_data'])->name('form_laporan');
     Route::post('/dashboard/data-harga/store', [DataLaporanProdukController::class, 'store'])->name('data.input.store');
-    Route::put('/harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga_user');
-    Route::put('/pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan_user');
+    Route::put('/dashboard/data-harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga_user');
+    Route::put('/dashboard/data-pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan_user');
 
     
     Route::get('dashboard/profile', function (){
@@ -78,9 +79,9 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::post('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'handleData'])->name('handle-data');
 
     Route::get('/admin-dashboard/data-harga/form', [DataLaporanProdukController::class, 'form_input'])->name('form.input.laporan');
-    Route::post('/dashboard/data-harga/store', [DataLaporanProdukController::class, 'store_admin'])->name('laporan.store');
-    Route::put('/harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga');
-    Route::put('/pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan');
+    Route::post('/admin-dashboard/data-harga/store', [DataLaporanProdukController::class, 'store_admin'])->name('laporan.store');
+    Route::put('/admin-dashboard/data-harga/update', [DataLaporanProdukController::class, 'update_harga'])->name('update_harga');
+    Route::put('/admin-dashboard/data-pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan');
 
 
 
@@ -109,6 +110,8 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
         Route::delete('/api/delete-lokasi/{id}', [LokasiController::class, 'deleteLokasi']);
     });
 });
+
+Route::get('/generate-pdf', [ReportController::class, 'generatePdf']);
 
 
 // Route::get('/dashboard', [ChartController::class, 'showChart']);

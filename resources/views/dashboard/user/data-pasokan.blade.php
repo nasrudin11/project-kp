@@ -66,11 +66,11 @@
                                         @foreach ($dates as $week => $date)
                                             <td>
                                                 @php
-                                                     $hargaSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
+                                                     $pasokanSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
                                                 @endphp
-                                                @if($hargaSenin)
-                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaSenin->pasokan }}" data-id="{{ $hargaSenin->id_harga }}">
-                                                        {{ $hargaSenin->pasokan }}
+                                                @if($pasokanSenin)
+                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanSenin->pasokan }}" data-id="{{ $pasokanSenin->id_harga }}">
+                                                        {{ $pasokanSenin->pasokan }}
                                                     </a>
                                                 @else
                                                     -
@@ -78,11 +78,11 @@
                                             </td>
                                             <td>
                                                 @php
-                                                     $hargaKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
+                                                     $pasokanKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
                                                 @endphp
-                                                @if($hargaSenin)
-                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaSenin->pasokan }}" data-id="{{ $hargaSenin->id_harga }}">
-                                                        {{ $hargaSenin->pasokan }}
+                                                @if($pasokanKamis)
+                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanKamis->pasokan }}" data-id="{{ $pasokanKamis->id_harga }}">
+                                                        {{ $pasokanKamis->pasokan }}
                                                     </a>
                                                 @else
                                                     -
@@ -127,11 +127,11 @@
                                         @foreach ($dates as $week => $date)
                                             <td>
                                                 @php
-                                                     $hargaSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
+                                                     $pasokanSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
                                                 @endphp
-                                                @if($hargaSenin)
-                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaSenin->pasokan }}" data-id="{{ $hargaSenin->id_harga }}">
-                                                        {{ $hargaSenin->pasokan }}
+                                                @if($pasokanSenin)
+                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanSenin->pasokan }}" data-id="{{ $pasokanSenin->id_harga }}">
+                                                        {{ $pasokanSenin->pasokan }}
                                                     </a>
                                                 @else
                                                     -
@@ -139,11 +139,11 @@
                                             </td>
                                             <td>
                                                 @php
-                                                     $hargaKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
+                                                     $pasokanKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
                                                 @endphp
-                                                @if($hargaSenin)
-                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaSenin->pasokan }}" data-id="{{ $hargaSenin->id_harga }}">
-                                                        {{ $hargaSenin->pasokan }}
+                                                @if($pasokanKamis)
+                                                    <a href="#" class="text-decoration-none text-dark"  data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanKamis->pasokan }}" data-id="{{ $pasokanKamis->id_harga }}">
+                                                        {{ $pasokanKamis->pasokan }}
                                                     </a>
                                                 @else
                                                     -
