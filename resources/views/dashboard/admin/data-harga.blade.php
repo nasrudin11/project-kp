@@ -56,6 +56,7 @@
                             <form action="{{ route('handle-data') }}" method="POST" id="form-pasar">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="tab-pasar">
+                                <input type="hidden" name="tipe" value="harga">
                                 <label for="select-pasar" class="form-label">Pilih Pasar:</label>
                                 <div class="d-flex">
                                     <div class="me-2">
@@ -99,6 +100,7 @@
                             <form action="{{ route('handle-data') }}" method="POST" id="form-kecamatan">
                                 @csrf
                                 <input type="hidden" name="active_tab" value="tab-kecamatan">
+                                <input type="hidden" name="tipe" value="harga">
                                 <label for="select-kecamatan" class="form-label">Pilih Kecamatan:</label>
 
                                 <div class="d-flex">

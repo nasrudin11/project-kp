@@ -54,7 +54,7 @@
         <!-- Laporan Section -->
         <li class="nav-header text-secondary mt-3">CETAK</li>
         <li>
-            <a href="/update-harga" class="nav-link nav-link-hover {{ ($title == 'Cetak Laporan') ? 'active' : '' }}">
+            <a href="{{ route('cetak_laporan') }}" class="nav-link nav-link-hover }}">
                 <i class="bi bi-grid-fill me-2"></i>
                 <span class="poppins-medium">Cetak Laporan</span>
             </a>

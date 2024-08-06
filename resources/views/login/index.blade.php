@@ -31,9 +31,8 @@
 
                     <form action="/login" method="post">
                         @csrf
-                        <div class="text-center">
-                            <img class="mb-4 logo-img" src="img/logo.png" alt="">
-                            <h1 class="h3 mb-3 fw-normal">Log in</h1>
+                        <div class="text-center mb-4 mt-3">
+                            <img class="logo-img" src="img/logo2.png" alt="">  
                         </div>       
                         <div class="form-floating">
                             <input type="email" class="form-control rounded-top @error('email') is-invalid @enderror" id="floatingInput" name="email" placeholder="name@example.com" value="{{ old('email') }}" autofocus required>

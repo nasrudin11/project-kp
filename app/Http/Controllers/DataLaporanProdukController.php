@@ -151,7 +151,7 @@ class DataLaporanProdukController extends Controller
             // Rata-rata harga pengecer
             $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan','users.id_pasar')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
                 ->where('harga_produk.tipe_harga', 'pengecer')
                 ->where(function($query) {
                     $query->where('produk.target', 'Pedagang')
@@ -165,7 +165,7 @@ class DataLaporanProdukController extends Controller
             // Rata-rata harga grosir
             $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
                 ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-                ->select('produk.id_produk', 'produk.nama_produk as komoditi','harga_produk.pasokan', 'users.id_pasar')
+                ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'),'harga_produk.pasokan', 'users.id_pasar')
                 ->where('harga_produk.tipe_harga', 'grosir')
                 ->where(function($query) {
                     $query->where('produk.target', 'Pedagang')
@@ -274,146 +274,6 @@ class DataLaporanProdukController extends Controller
             ];
         }
     }
-
-    // private function DataPasokanPasar(Request $request)
-    // {
-    //     $idPasar = $request->get('id_pasar', 'semua');
-    //     $pasars = Pasar::all();
-    //     $kecamatans = Kecamatan::all();
-    //     $currentMonth = Carbon::now()->format('m');
-    //     $currentMonthName = Carbon::now()->format('F Y');
-    //     $currentYear = Carbon::now()->format('Y');
-    //     $dates = $this->getWeeklyDates($currentMonth);
-
-    //     // Ambil nilai active_tab dari request
-    //     $activeTab = $request->get('active_tab', 'tab-pasar');
-
-    //     if ($idPasar === 'semua') {
-    //         // Rata-rata harga pengecer
-    //         $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan', 'users.id_pasar')
-    //             ->where('harga_produk.tipe_harga', 'pengecer')
-    //             ->where(function($query) {
-    //                 $query->where('produk.target', 'Pedagang')
-    //                     ->orWhere('produk.target', 'Keduanya');
-    //             })
-    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
-    //             ->get()
-    //             ->groupBy('komoditi');
-
-    //         // Rata-rata harga grosir
-    //         $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'harga_produk.pasokan', 'users.id_pasar')
-    //             ->where('harga_produk.tipe_harga', 'grosir')
-    //             ->where(function($query) {
-    //                 $query->where('produk.target', 'Pedagang')
-    //                     ->orWhere('produk.target', 'Keduanya');
-    //             })
-    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar')
-    //             ->get()
-    //             ->groupBy('komoditi');
-
-    //         return [
-    //             'dataPengecer' => $dataPengecer,
-    //             'dataGrosir' => $dataGrosir,
-    //             'pasars' => $pasars,
-    //             'kecamatans' => $kecamatans,
-    //             'currentMonthName' => $currentMonthName,
-    //             'dates' => $dates,
-    //             'active_tab' => $activeTab
-    //         ];
-    //     } else {
-    //         // Data harga pasar detail berdasarkan id_pasar
-    //         $dataDetailPengecer = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //             ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
-    //             ->where('users.id_pasar', $idPasar)
-    //             // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
-    //             ->whereYear('harga_produk.tgl_entry', $currentYear)
-    //             ->where('harga_produk.tipe_harga', 'pengecer')
-    //             ->select('harga_produk.*', 'produk.nama_produk')
-    //             ->get()
-    //             ->groupBy('produk.id_produk');
-
-    //         $dataDetailGrosir = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //             ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
-    //             ->where('users.id_pasar', $idPasar)
-    //             // ->whereMonth('harga_produk.tgl_entry', $currentMonth)
-    //             ->whereYear('harga_produk.tgl_entry', $currentYear)
-    //             ->where('harga_produk.tipe_harga', 'grosir')
-    //             ->select('harga_produk.*', 'produk.nama_produk')
-    //             ->get()
-    //             ->groupBy('produk.id_produk');
-
-    //         return [
-    //             'dataDetailPengecer' => $dataDetailPengecer,
-    //             'dataDetailGrosir' => $dataDetailGrosir,
-    //             'pasars' => $pasars,
-    //             'kecamatans' => $kecamatans,
-    //             'currentMonthName' => $currentMonthName,
-    //             'dates' => $dates,
-    //             'active_tab' => $activeTab
-    //         ];
-    //     }
-    // }
-
-    // private function DataKecamatan(Request $request)
-    // {
-    //     $idKecamatan = $request->get('id_kecamatan', 'semua');
-    //     $pasars = Pasar::all();
-    //     $kecamatans = Kecamatan::all();
-    //     $currentMonth = Carbon::now()->format('m');
-    //     $currentMonthName = Carbon::now()->format('F Y');
-    //     $currentYear = Carbon::now()->format('Y');
-    //     $dates = $this->getWeeklyDates($currentMonth);
-
-    
-    //     // Ambil nilai active_tab dari request
-    //     $activeTab = $request->get('active_tab', 'tab-pasar');
-    
-    //     if ($idKecamatan === 'semua') {
-    //         // Ambil data rata-rata harga produsen untuk semua kecamatan
-    //         $dataKecamatan = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //             ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'users.id_kecamatan')
-    //             ->where('harga_produk.tipe_harga', 'produsen')
-    //             ->where(function($query) {
-    //                 $query->where('produk.target', 'Produsen')
-    //                     ->orWhere('produk.target', 'Keduanya');
-    //             })
-    //             ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan')
-    //             ->get()
-    //             ->groupBy('komoditi');
-    
-    //         return [
-    //             'dataKecamatan' => $dataKecamatan,
-    //             'pasars' => $pasars,
-    //             'kecamatans' => $kecamatans,
-    //             'currentMonthName' => $currentMonthName,
-    //             'dates' => $dates,
-    //             'active_tab' => $activeTab
-    //         ];
-    //     } else {
-    //         $dataDetailProdusen = HargaProduk::leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //         ->leftJoin('produk', 'harga_produk.id_produk', '=', 'produk.id_produk')
-    //         ->where('users.id_kecamatan', $idKecamatan)
-    //         ->whereYear('harga_produk.tgl_entry', $currentYear)
-    //         ->where('harga_produk.tipe_harga', 'produsen')
-    //         ->select('harga_produk.*', 'produk.nama_produk')
-    //         ->get()
-    //         ->groupBy('produk.id_produk');
-    
-    //         return [
-    //             'dataDetailProdusen' => $dataDetailProdusen,
-    //             'pasars' => $pasars,
-    //             'kecamatans' => $kecamatans,
-    //             'currentMonthName' => $currentMonthName,
-    //             'dates' => $dates,
-    //             'active_tab' => $activeTab
-    //         ];
-    //     }
-    // }
 
     public function handleData(Request $request)
     {

@@ -2,8 +2,13 @@
     <div class="card-body">
         <div class="dropdown d-flex justify-content-end">
             <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="32" height="32" class="rounded-circle me-1">               
+                @if (Auth::user()->gambar_profil)
+                    <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="32" height="32" class="rounded-circle me-1 border border-2 border-black">
+                @else
+                    <img src="{{ asset('img/user-default.png') }}" alt="" width="32" height="32" class="rounded-circle me-1 border border-2 border-black">
+                @endif
             </a>
+            
             <ul class="dropdown-menu text-small shadow">
                 <li><a class="dropdown-item" href="#"><strong>{{ Auth::user()->name }}</strong></li>
                 <li><a class="dropdown-item" href="{{ Auth::user()->role == 'admin' ? '/admin-dashboard/profile' : '/dashboard/profile' }}"><i class="bi bi-person-fill-gear me-2"></i>Profile</a></li>

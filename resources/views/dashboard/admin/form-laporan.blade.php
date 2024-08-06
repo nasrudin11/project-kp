@@ -56,6 +56,7 @@
                 @if($tipe == 'pedagang')
                     <div class="tab-pane fade show active" id="pengecer" role="tabpanel" aria-labelledby="pengecer-tab">
                         <form action="{{ route('laporan.store') }}" method="POST" class="mt-4">
+                            @csrf
                             <input type="hidden" name="tipe_harga" value="pengecer">
                             <div class="d-flex">
                                 <div class="mt-3 me-4">
