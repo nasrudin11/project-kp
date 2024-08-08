@@ -39,58 +39,58 @@
     <main class="container mt-5 mb-5">   
 
         <div class="container p-0">
-            <h5>Data Tingkat Pengecer</h3>
-            <span>Tanggal 08 Agustus 2024</span>
-            <div class="scrollimage mt-3 pb-4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
-            </div>
-            
+            <h5>Data Tingkat Pengecer</h5>
+            <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
+            <div class="scrollimage mt-3">
+                @foreach($dataPengecer as $komoditi => $items)
+                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
+                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
+                             class="card-img-top" 
+                             alt="{{ $komoditi }}" 
+                             style="height: 150px; object-fit: cover; width: 100%;">
+                        <div class="card-body" style="height: 100px; overflow: hidden;">
+                            <p class="card-title">{{ $komoditi }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>   
         </div>
-
-
-
+        
 
         <div class="container mt-4 p-0">
             <h5>Data Tingkat Grosir</h3>
-            <span>Tanggal 08 Agustus 2024</span>
+            <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
             <div class="scrollimage mt-3 pb-4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
+                @foreach($dataPengecer as $komoditi => $items)
+                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
+                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
+                            class="card-img-top" 
+                            alt="{{ $komoditi }}" 
+                            style="height: 150px; object-fit: cover; width: 100%;">
+                        <div class="card-body" style="height: 100px; overflow: hidden;">
+                            <p class="card-title">{{ $komoditi }}</p>
+                        </div>
+                    </div>
+                @endforeach
             </div>
             
         </div>
 
         <div class="container mt-4 p-0">
             <h5>Data Tingkat Produsen</h3>
-            <span>Tanggal 08 Agustus 2024</span>
+            <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
             <div class="scrollimage mt-3 pb-4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 1">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 2">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 3">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 4">
-                <img src="https://via.placeholder.com/150" class="rounded shadow me-3" alt="Image 5">
+                @foreach($dataProdusen as $komoditi => $items)
+                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
+                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
+                            class="card-img-top" 
+                            alt="{{ $komoditi }}" 
+                            style="height: 150px; object-fit: cover; width: 100%;">
+                        <div class="card-body" style="height: 100px; overflow: hidden;">
+                            <p class="card-title">{{ $komoditi }}</p>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
 

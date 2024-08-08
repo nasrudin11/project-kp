@@ -12,10 +12,66 @@ use Illuminate\Support\Facades\DB;
 
 class LandingController extends Controller
 {
-    public function index(){
+    public function index() {
+        $pasars = Pasar::all();
+        $kecamatans = Kecamatan::all();
+        $currentMonth = Carbon::now()->format('m');
+        $currentMonthName = Carbon::now()->format('F Y');
+        $currentYear = Carbon::now()->format('Y');
+        $dates = $this->getWeeklyDates($currentMonth);
+    
+        // Rata-rata harga pengecer
+        $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
+            ->where('harga_produk.tipe_harga', 'pengecer')
+            ->where(function($query) {
+                $query->where('produk.target', 'Pedagang')
+                    ->orWhere('produk.target', 'Keduanya');
+            })
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
+            ->get()
+            ->groupBy('komoditi');
+            
+    
+        // Rata-rata harga grosir
+        $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
+            ->where('harga_produk.tipe_harga', 'grosir')
+            ->where(function($query) {
+                $query->where('produk.target', 'Pedagang')
+                    ->orWhere('produk.target', 'Keduanya');
+            })
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
+            ->get()
+            ->groupBy('komoditi');
 
-        return view('index', ['title' => 'Home Page']);
+        // Rata-rata harga grosir
+        $dataProdusen = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
+            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
+            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
+            ->where('harga_produk.tipe_harga', 'produsen')
+            ->where(function($query) {
+                $query->where('produk.target', 'Produsen')
+                    ->orWhere('produk.target', 'Keduanya');
+            })
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
+            ->get()
+            ->groupBy('komoditi');
+    
+        return view('index', [
+            'title' => 'Home Page', 
+            'dataPengecer' => $dataPengecer,
+            'dataGrosir' => $dataGrosir,
+            'dataProdusen' => $dataProdusen,
+            'pasars' => $pasars,
+            'kecamatans' => $kecamatans,
+            'currentMonthName' => $currentMonthName,
+            'dates' => $dates
+        ]);
     }
+    
 
     public function data_harga(Request $request)
     {
@@ -163,6 +219,7 @@ class LandingController extends Controller
                 ->get()
                 ->groupBy('komoditi');
 
+            
 
             // Rata-rata harga grosir
             $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')

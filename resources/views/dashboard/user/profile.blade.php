@@ -31,7 +31,7 @@
     @endif
 
     <div class="row mt-4">
-      <div class="col-md-5">
+      <div class="col-md-5 mb-4">
         <div class="card shadow border-0 text-center">
           <div class="card-body d-flex flex-column align-items-center">
 

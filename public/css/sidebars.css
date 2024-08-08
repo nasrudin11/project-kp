@@ -112,7 +112,6 @@ body{
   font-style: italic;
 }
 
-
 /* Styles for the sidebar */
 .sidebar {
   width: 200px; /* Initial width */
@@ -122,18 +121,21 @@ body{
   position: sticky;
   top: 0;
   z-index: 1040; /* Higher than default Bootstrap z-index for dropdowns */
+  transition: transform 0.3s ease; /* Smooth transition for responsive changes */
 }
 
-Other styles remain the same
+/* Sidebar logo styling */
 .sidebar .logo {
   width: 40px; /* Default size */
   height: 40px; 
 }
 
+/* Navigation header styling */
 .nav-header {
   font-size: 12px;
 }
 
+/* Styling for nav links with hover effect */
 .nav-link-hover {
   color: #3f4142;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -141,7 +143,7 @@ Other styles remain the same
 
 .nav-link-hover:hover {
   background-color: rgba(0, 0, 0, 0.1);
-  color: #3f4142
+  color: #3f4142;
 }
 
 .nav-link.nav-link-hover.active {
@@ -161,6 +163,7 @@ Other styles remain the same
   text-align: left;
 }
 
+/* Button primary styling */
 .btn-primary {
   background-color: #004085; /* dark blue */
   border-color: #004085; /* dark blue */
@@ -171,7 +174,7 @@ Other styles remain the same
   border-color: #003366; /* darker blue */
 }
 
-/* Ensure the dropdown menu is full width */
+/* Dropdown menu styling */
 .dropdown-menu.w-100 {
   width: 100%;
   z-index: 1030; /* Lower than sidebar */
@@ -181,5 +184,34 @@ Other styles remain the same
 .main-content {
   position: relative;
   z-index: 1020; /* Adjust to be lower than dropdown but higher than other content */
+}
+
+/* Ensure sidebar is hidden on small screens */
+@media (max-width: 991px) {
+  #sidebar {
+    display: none !important; /* Forcefully hide sidebar */
+  }
+}
+
+.offcanvas {
+  width: 200px !important; 
+}
+
+/* Ensure offcanvas is visible on small screens */
+@media (max-width: 991px) {
+  .offcanvas-start {
+    display: block !important; /* Forcefully show offcanvas */
+  }
+}
+
+/* Show sidebar on large screens */
+@media (min-width: 992px) {
+  #sidebar {
+    display: block !important; /* Ensure sidebar is visible */
+  }
+
+  .offcanvas-start {
+    display: none !important; /* Ensure offcanvas is hidden on large screens */
+  }
 }
 

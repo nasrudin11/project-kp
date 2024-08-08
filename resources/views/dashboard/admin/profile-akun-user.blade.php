@@ -11,7 +11,7 @@
             <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
                 <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="#">Akun User</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Detail Profil {{ $user->name }}</li>
+                <li class="breadcrumb-item active" aria-current="page">Profil {{ $user->name }}</li>
             </ol>
         </nav>
     </div>
@@ -31,7 +31,7 @@
     @endif
 
     <div class="row mt-4">
-        <div class="col-md-5">
+        <div class="col-md-5 mb-4">
             <div class="card shadow border-0 text-center">
                 <div class="card-body d-flex flex-column align-items-center">
                     @if ($user->gambar_profil)

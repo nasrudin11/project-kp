@@ -146,7 +146,7 @@ body{
   white-space: nowrap;
 }
 
-.scrollimage img{
+.scrollimage .card{
   display: inline-block;
   text-align: center;
   text-decoration: none;

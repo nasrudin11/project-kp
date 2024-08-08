@@ -31,18 +31,18 @@
     @endif
 
     <div class="row mt-4">
-      <div class="col-md-5">
+      <div class="col-md-5 mb-4">
         <div class="card shadow border-0 text-center">
           <div class="card-body d-flex flex-column align-items-center">
 
             
             @if (Auth::user()->gambar_profil)
-            <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="180px" height="180px" class="rounded-circle border border-black border-2 mb-2">
+                <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="180px" height="180px" class="rounded-circle border border-black border-2 mb-2">
             @else
-            <img src="" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
+                <img src="" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
             @endif
-            <span class="poppins-bold mt-2">{{ Auth::user()->role }}</span>
-            <span class="poppins-medium mt-1">{{ Auth::user()->name }}</span>
+                <span class="poppins-bold mt-2">{{ Auth::user()->role }}</span>
+                <span class="poppins-medium mt-1">{{ Auth::user()->name }}</span>
           </div>
         </div>
       </div>

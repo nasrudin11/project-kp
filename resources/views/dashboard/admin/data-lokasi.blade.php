@@ -112,8 +112,8 @@
                                 
                                 <!-- Edit Modal Pasar -->
                                 <div class="modal fade" id="editModalPasar{{ $pasar->id_pasar }}" tabindex="-1" aria-labelledby="editModalPasarLabel{{ $pasar->id_pasar }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content modal-dialog-centered">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalPasarLabel{{ $pasar->id_pasar }}">Edit Data Pasar</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
