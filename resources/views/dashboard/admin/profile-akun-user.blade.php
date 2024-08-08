@@ -65,7 +65,10 @@
                     </ul>
 
                     <div class="tab-content" id="myTabContent">
+
+                        <!-- Form Update Profil -->
                         <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    
                             <form action="{{ route('profile-akun-user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -231,6 +234,7 @@
                             
                         </div>
 
+                        <!-- Form Reset Password -->
                         <div class="tab-pane fade" id="reset" role="tabpanel" aria-labelledby="reset-tab">
                             <form action="{{ route('profile-akun-user.update-password', $user->id) }}" method="POST">
                                 @csrf

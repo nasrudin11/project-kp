@@ -53,6 +53,8 @@
             @endif
 
             <div class="tab-content" id="inputTabContent">
+
+                <!-- Tabel Form Pengecer -->
                 @if($tipe == 'pedagang')
                     <div class="tab-pane fade show active" id="pengecer" role="tabpanel" aria-labelledby="pengecer-tab">
                         <form action="{{ route('laporan.store') }}" method="POST" class="mt-4">
@@ -74,7 +76,6 @@
                                 </div>
                             </div>
                            
-
                             <table class="table table-bordered mt-3">
                                 <thead>
                                     <tr>
@@ -126,6 +127,8 @@
                         </form>
                     </div>
 
+                    <!-- Tabel Form Grosir -->
+
                     <div class="tab-pane fade" id="grosir" role="tabpanel" aria-labelledby="grosir-tab">
                         <form action="{{ route('laporan.store') }}" method="POST" class="mt-4">
                             @csrf
@@ -176,6 +179,8 @@
                             <button type="submit" class="btn btn-primary mt-4">Submit</button>
                         </form>
                     </div>
+
+                <!-- Tabel Form Produsen -->
                 @elseif($tipe == 'produsen')
                     <div class="tab-pane fade show active" id="produsen" role="tabpanel" aria-labelledby="produsen-tab">
                         <form action="{{ route('laporan.store') }}" method="POST" class="mt-4">

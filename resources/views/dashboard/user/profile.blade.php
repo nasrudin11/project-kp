@@ -39,7 +39,7 @@
             @if (Auth::user()->gambar_profil)
                 <img src="{{ asset('storage/' . Auth::user()->gambar_profil) }}" alt="" width="180px" height="180px" class="rounded-circle border border-black border-2 mb-2">
             @else
-                <img src="" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
+                <img src="{{ asset('img/user-default.png') }}" alt="" width="180px" height="180px" class="rounded-circle border border-primary mb-2">
             @endif
 
             <span class="poppins-bold mt-2">{{ Auth::user()->role }}</span>

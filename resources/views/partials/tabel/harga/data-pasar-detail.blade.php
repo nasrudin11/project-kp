@@ -1,9 +1,8 @@
 <div id="data-pasar-detail">
     <h4 class="text-center mt-4">Data Harga Pangan Tingkat Pedagang Pengecer Pasar Babat</h4>
     <h5 class="text-center mt-2">{{ $currentMonthName }}</h5>
-
     <div class="table-responsive">
-        <table class="table table-bordered table-hover mt-4">
+        <table class="table table-bordered table-hover mt-4" style="font-size: 14px">
             <thead class="table-primary align-middle text-center">
                 <tr>
                     <th rowspan="3">NO</th>
@@ -23,18 +22,18 @@
                 </tr>
             </thead>
             <tbody class="align-middle">
-                @foreach($dataDetailPengecer as $produkId => $pasokanEntries)
+                @foreach($dataDetailPengecer as $produkId => $hargaEntries)
                     <tr>
                         <th class="text-center" scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $pasokanEntries->first()->nama_produk ?? '-' }}</td>
+                        <td>{{ $hargaEntries->first()->nama_produk ?? '-' }}</td>
                         @foreach ($dates as $week => $date)
                             <td class="text-center">
                                 @php
-                                    $pasokanSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
+                                    $hargaSenin = $hargaEntries->firstWhere('tgl_entry', $date['monday']);
                                 @endphp
-                                @if($pasokanSenin)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanSenin->pasokan }}" data-id="{{ $pasokanSenin->id_harga }}">
-                                        {{ $pasokanSenin->pasokan }}
+                                @if($hargaSenin)
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaSenin->harga }}" data-id="{{ $hargaSenin->id_harga }}">
+                                        {{ $hargaSenin->harga }}
                                     </a>
                                 @else
                                     -
@@ -42,11 +41,11 @@
                             </td>
                             <td class="text-center">
                                 @php
-                                    $pasokanKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
+                                    $hargaKamis = $hargaEntries->firstWhere('tgl_entry', $date['thursday']);
                                 @endphp
-                                @if($pasokanKamis)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanKamis->pasokan }}" data-id="{{ $pasokanKamis->id_harga }}">
-                                        {{ $pasokanKamis->pasokan }}
+                                @if($hargaKamis)
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaKamis->harga }}" data-id="{{ $hargaKamis->id_harga }}">
+                                        {{ $hargaKamis->harga }}
                                     </a>
                                 @else
                                     -
@@ -62,9 +61,8 @@
 
     <h4 class="text-center mt-4">Data Harga Pangan Tingkat Pedagang Grosir Babat</h4>
     <h5 class="text-center mt-2">{{ $currentMonthName }}</h5>
-    
     <div class="table-responsive">
-        <table class="table table-bordered table-hover mt-4">
+        <table class="table table-bordered table-hover mt-4" style="font-size: 14px">
             <thead class="table-primary align-middle">
                 <tr>
                     <th rowspan="3">NO</th>
@@ -84,18 +82,18 @@
                 </tr>
             </thead>
             <tbody class="align-middle">
-                @foreach($dataDetailGrosir as $produkId => $pasokanEntries)
+                @foreach($dataDetailGrosir as $produkId => $hargaEntries)
                     <tr>
                         <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $pasokanEntries->first()->nama_produk ?? '-' }}</td>
+                        <td>{{ $hargaEntries->first()->nama_produk ?? '-' }}</td>
                         @foreach ($dates as $week => $date)
                             <td class="text-center">
                                 @php
-                                    $pasokanSenin = $pasokanEntries->firstWhere('tgl_entry', $date['monday']);
+                                    $hargaSenin = $hargaEntries->firstWhere('tgl_entry', $date['monday']);
                                 @endphp
-                                @if($pasokanSenin)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanSenin->pasokan }}" data-id="{{ $pasokanSenin->id_harga }}">
-                                        {{ $pasokanSenin->pasokan }}
+                                @if($hargaSenin)
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaSenin->harga }}" data-id="{{ $hargaSenin->id_harga }}">
+                                        {{ $hargaSenin->harga }}
                                     </a>
                                 @else
                                     -
@@ -103,11 +101,11 @@
                             </td>
                             <td class="text-center">
                                 @php
-                                    $pasokanKamis = $pasokanEntries->firstWhere('tgl_entry', $date['thursday']);
+                                    $hargaKamis = $hargaEntries->firstWhere('tgl_entry', $date['thursday']);
                                 @endphp
-                                @if($pasokanKamis)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $pasokanKamis->pasokan }}" data-id="{{ $pasokanKamis->id_harga }}">
-                                        {{ $pasokanKamis->pasokan }}
+                                @if($hargaKamis)
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaKamis->harga }}" data-id="{{ $hargaKamis->id_harga }}">
+                                        {{ $hargaKamis->harga }}
                                     </a>
                                 @else
                                     -

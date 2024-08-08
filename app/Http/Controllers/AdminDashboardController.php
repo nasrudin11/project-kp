@@ -2,35 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\HargaProduk;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
     public function index() {
-        $data = [
-            'categories' => ['January', 'February', 'March', 'April', 'May'], // Months
-            'series' => [
-                [
-                    'name' => 'Beras Premium',
-                    'data' => [10, 15, 14, 17, 20]
-                ],
-                [
-                    'name' => 'Beras Medium',
-                    'data' => [9, 12, 11, 15, 18]
-                ],
-                [
-                    'name' => 'Beras Termurah',
-                    'data' => [8, 10, 9, 12, 15]
-                ],
-                // Add more series for other staple foods
-                [
-                    'name' => 'Jagung Pipilan',
-                    'data' => [5, 6, 7, 8, 9]
-                ],
-                // ... (other food items)
-            ]
-        ];
-
-        return view('dashboard.admin.index', compact('data'), ['title' => 'Dashboard Admin']);
+        $data = [];
+        
+        // Fetch product prices for the current month on Mondays and Thursdays
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        
+        $dates = [];
+        for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+            if ($date->isMonday() || $date->isThursday()) {
+                $dates[] = $date->format('Y-m-d');
+            }
+        }
+        
+        // Fetch data based on role
+        $hargaProduk = HargaProduk::whereIn('tipe_harga', ['pengecer', 'grosir', 'produsen'])
+            ->whereIn('tgl_entry', $dates)
+            ->get();
+        
+        // Process data
+        foreach ($hargaProduk as $harga) {
+            $data[$harga->tipe_harga][$harga->produk->nama_produk][$harga->tgl_entry] = (int)$harga->harga;
+        }
+        
+        $chartData = [];
+        foreach ($data as $tipeHarga => $products) {
+            foreach ($products as $product => $prices) {
+                $productData = [];
+                foreach ($dates as $date) {
+                    $productData[] = $prices[$date] ?? 0;
+                }
+                $chartData[$tipeHarga][] = [
+                    'name' => $product,
+                    'data' => $productData
+                ];
+            }
+        }
+    
+        // dd($chartData); 
+    
+        $datesFormatted = array_map(function($date) {
+            return Carbon::parse($date)->format('d M');
+        }, $dates);
+        
+        return view('dashboard.admin.index', compact('chartData', 'datesFormatted'), ['title' => 'Dashboard']);
     }
+    
+    
 }

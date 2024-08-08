@@ -1,9 +1,9 @@
 <div id="data-pasar-detail">
-    <h4 class="text-center mt-4">Data Pasokan Pangan Tingkat Produsen</h4>
+    <h4 class="text-center mt-4">Data Harga Pangan Tingkat Produsen</h4>
     <h5 class="text-center mt-2">{{ $currentMonthName }}</h5>
-
+    
     <div class="table-responsive">
-        <table class="table table-bordered table-hover mt-4">
+        <table class="table table-bordered table-hover mt-4" style="font-size: 14px">
             <thead class="table-primary align-middle text-center">
                 <tr>
                     <th rowspan="3">NO</th>
@@ -33,8 +33,8 @@
                                     $hargaSenin = $hargaEntries->firstWhere('tgl_entry', $date['monday']);
                                 @endphp
                                 @if($hargaSenin)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaSenin->pasokan }}" data-id="{{ $hargaSenin->id_harga }}">
-                                        {{ $hargaSenin->pasokan }}
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaSenin->harga }}" data-id="{{ $hargaSenin->id_harga }}">
+                                        {{ $hargaSenin->harga }}
                                     </a>
                                 @else
                                     -
@@ -45,8 +45,8 @@
                                     $hargaKamis = $hargaEntries->firstWhere('tgl_entry', $date['thursday']);
                                 @endphp
                                 @if($hargaKamis)
-                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-pasokan="{{ $hargaKamis->pasokan }}" data-id="{{ $hargaKamis->id_harga }}">
-                                        {{ $hargaKamis->pasokan }}
+                                    <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#editModal" data-harga="{{ $hargaKamis->harga }}" data-id="{{ $hargaKamis->id_harga }}">
+                                        {{ $hargaKamis->harga }}
                                     </a>
                                 @else
                                     -
@@ -58,5 +58,5 @@
             </tbody>
         </table>
     </div>
-    
+
 </div>

@@ -36,6 +36,11 @@
             text-align: left;
         }
 
+        .product-image {
+            width: 50px;
+            height: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -61,6 +66,17 @@
                 <tr>
                     <th>{{ $loop->iteration }}</th>
                     <td class="text-left">{{ $komoditi }}</td>
+                    {{-- <td>
+                        @php
+                            $gambar = $rows->first()->gambar; // Ambil gambar dari elemen pertama dalam koleksi
+                            // $url = asset('storage/' . $gambar);
+                            // dd($url); // Tampilkan URL lengkap untuk memeriksa apakah benar
+                        @endphp
+                        <img src="{{ 'storage/' . $gambar }}" alt="Gambar Produk" class="product-image">
+
+                    
+                    </td>    --}}
+                    
                     @foreach ($pasars as $pasar)
                         <td>
                             @php
@@ -74,8 +90,5 @@
             @endforeach
         </tbody>
     </table>
-
-
-
 </body>
 </html>

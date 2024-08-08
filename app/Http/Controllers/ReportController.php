@@ -14,58 +14,6 @@ use App\Models\Produk; // Ganti dengan model yang sesuai
 
 class ReportController extends Controller
 {
-    // public function generatePdf()
-    // {
-    //     $pasars = Pasar::all();
-    //     $kecamatans = Kecamatan::all();
-    //     $currentMonth = Carbon::now()->format('m');
-    //     $currentMonthName = Carbon::now()->format('F Y');
-    //     $dates = $this->getWeeklyDates($currentMonth);
-
-    //     $dataRataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //         ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //         ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
-    //         ->where('harga_produk.tipe_harga', 'pengecer')
-    //         ->where(function($query) {
-    //             $query->where('produk.target', 'Pedagang')
-    //                 ->orWhere('produk.target', 'Keduanya');
-    //         })
-    //         ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
-    //         ->get()
-    //         ->groupBy('komoditi');
-
-    //     $dataRataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //         ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //         ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
-    //         ->where('harga_produk.tipe_harga', 'grosir')
-    //         ->where(function($query) {
-    //             $query->where('produk.target', 'Pedagang')
-    //                 ->orWhere('produk.target', 'Keduanya');
-    //         })
-    //         ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
-    //         ->get()
-    //         ->groupBy('komoditi');
-
-    //     $dataRataProdusen = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-    //         ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-    //         ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_kecamatan')
-    //         ->where('harga_produk.tipe_harga', 'produsen')
-    //         ->where(function($query) {
-    //             $query->where('produk.target', 'Produsen')
-    //                 ->orWhere('produk.target', 'Keduanya');
-    //         })
-    //         ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan', 'harga_produk.pasokan')
-    //         ->get()
-    //         ->groupBy('komoditi');
-        
-
-    //     // Generate PDF
-    //     $pdf = Pdf::loadView('cetak_pdf', compact('dataRataPengecer','dataRataGrosir', 'dataRataProdusen', 'dates', 'currentMonthName', 'pasars', 'kecamatans'))
-    //             ->setPaper('a3', 'landscape');
-
-    //     // Download PDF
-    //     return $pdf->download('data_table_report.pdf');
-    // }
 
     public function generatePdf(){
         $pasars = Pasar::all();
@@ -76,37 +24,41 @@ class ReportController extends Controller
 
         $dataRataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
+            ->select('produk.id_produk', 'produk.gambar', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
             ->where('harga_produk.tipe_harga', 'pengecer')
             ->where(function($query) {
                 $query->where('produk.target', 'Pedagang')
                     ->orWhere('produk.target', 'Keduanya');
             })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan', 'produk.gambar')
             ->get()
             ->groupBy('komoditi');
+
+      
     
         $dataRataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
+            ->select('produk.id_produk','produk.gambar', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_pasar')
             ->where('harga_produk.tipe_harga', 'grosir')
             ->where(function($query) {
                 $query->where('produk.target', 'Pedagang')
                     ->orWhere('produk.target', 'Keduanya');
             })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan')
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_pasar', 'harga_produk.pasokan','produk.gambar')
             ->get()
             ->groupBy('komoditi');
 
+
+
         $dataRataProdusen = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
             ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_kecamatan')
+            ->select('produk.id_produk','produk.gambar', 'produk.nama_produk as komoditi', DB::raw('AVG(harga_produk.harga) as harga_rata_rata'), 'harga_produk.pasokan','users.id_kecamatan')
             ->where('harga_produk.tipe_harga', 'produsen')
             ->where(function($query) {
                 $query->where('produk.target', 'Produsen')
                     ->orWhere('produk.target', 'Keduanya');
             })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan', 'harga_produk.pasokan')
+            ->groupBy('produk.id_produk', 'produk.nama_produk', 'users.id_kecamatan', 'harga_produk.pasokan','produk.gambar')
             ->get()
             ->groupBy('komoditi');
 
@@ -114,6 +66,7 @@ class ReportController extends Controller
 
         $m = new Merger();
 
+        // dd($dataRataPengecer);
         // Pengecer
         $pdf_pe = Pdf::loadView('pdf.pengecer_harga_ratarata', compact('dataRataPengecer',  'dates', 'currentMonthName', 'pasars'))
                      ->setPaper('a3', 'potrait');

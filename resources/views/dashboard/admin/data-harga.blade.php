@@ -75,13 +75,13 @@
                         </div>
                         
                             @if($id_pasar == 'semua')
-                                @include('partials.tabel.data-pasar-ratarata', [
+                                @include('partials.tabel.harga.data-pasar-ratarata', [
                                     'dataPengecer' => $dataPengecer,
                                     'dataGrosir' => $dataGrosir,
                                     'pasars' => $pasars
                                 ])
                             @elseif($id_pasar != 'semua')
-                                @include('partials.tabel.data-pasar-detail', [
+                                @include('partials.tabel.harga.data-pasar-detail', [
                                     'dataDetailPengecer' => $dataDetailPengecer,
                                     'dataDetailGrosir' => $dataDetailGrosir,
                                     'dates' => $dates,
@@ -118,12 +118,12 @@
                         </div>
 
                             @if($id_kecamatan == 'semua')
-                                @include('partials.tabel.data-kecamatan-ratarata', [
+                                @include('partials.tabel.harga.data-kecamatan-ratarata', [
                                     'dataProdusen' => $dataProdusen,
                                     'kecamatans' => $kecamatans
                                 ])
                             @elseif($id_kecamatan != 'semua')
-                                @include('partials.tabel.data-kecamatan-detail', [
+                                @include('partials.tabel.harga.data-kecamatan-detail', [
                                     'dataDetailProdusen' => $dataDetailProdusen,
                                     'dates' => $dates,
                                     'currentMonthName' => $currentMonthName
@@ -139,7 +139,7 @@
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Harga</h5>
@@ -166,7 +166,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Simpan tab aktif ke localStorage sebelum submit
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', function() {
                 var activeTab = document.querySelector('.nav-tabs .nav-link.active').getAttribute('id');

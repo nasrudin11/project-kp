@@ -4,7 +4,7 @@
     </div>
 </footer> --}}
 
-<footer class="footer mt-auto py-3 bg-body-tertiary text-center">
+<footer class="footer mt-auto py-3 text-center shadow" style="background-color: #ffff">
     <div class="container">
       <span class="text-body-secondary">&copy; 2024 KOMINFO. All rights reserved.</span>
     </div>

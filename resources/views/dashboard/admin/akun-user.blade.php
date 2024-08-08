@@ -26,7 +26,7 @@
                 
                 <!-- Modal Tambah User -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">User Baru</h1>
@@ -199,49 +199,47 @@
                     </div>
                 </div>
 
-                                           
-                
-
-                <table id="akunTable" class="table table-striped" style="width: 100%">
-                    <thead class="table-primary align-middle ">
-                        <tr>
-                            <th>No</th>
-                            <th>Gambar_profil</th>
-                            <th>Nama User</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr class="align-middle">
-                                <th scope="row">{{ $loop->iteration }}</th>
-                                <td>
-                                    @if ($user->gambar_profil)
-                                        <img src="{{ asset('storage/' . $user->gambar_profil) }}" alt="{{ $user->gambar_profil }}" width="50">
-                                    @else
-                                        Tidak ada gambar_profil
-                                    @endif
-                                </td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
-                                <td>
-                                    <a href="{{ route('profile-akun-user', ['id' => $user->id]) }}" class="btn btn-warning btn-sm shadow">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                </td>
+                <!-- Tabel Akun User -->                       
+                <div class="table-responsive">
+                    <table id="akunTable" class="table table-striped" style="width: 100%">
+                        <thead class="table-primary align-middle ">
+                            <tr>
+                                <th>No</th>
+                                <th>Gambar_profil</th>
+                                <th>Nama User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Aksi</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($users as $user)
+                                <tr class="align-middle">
+                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td>
+                                        @if ($user->gambar_profil)
+                                            <img src="{{ asset('storage/' . $user->gambar_profil) }}" alt="{{ $user->gambar_profil }}" width="50">
+                                        @else
+                                            Tidak ada gambar_profil
+                                        @endif
+                                    </td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->role }}</td>
+                                    <td>
+                                        <a href="{{ route('profile-akun-user', ['id' => $user->id]) }}" class="btn btn-warning btn-sm shadow">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         </div>
     </main>
-
-    <!-- JavaScript -->
 
 <script>
     $(document).ready(function() {

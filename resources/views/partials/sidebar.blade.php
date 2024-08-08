@@ -10,7 +10,7 @@
         <li class="nav-header text-secondary">MAIN</li>
         <li>
             <a href="{{ Auth::user()->role == 'admin' ? '/admin-dashboard' : '/dashboard' }}" class="nav-link nav-link-hover {{ ($title == 'Dashboard' || $title == 'Dashboard Admin') ? 'active' : '' }}" aria-current="page">
-                <i class="bi bi-layout-text-window-reverse me-2"></i>
+                <i class="bi bi-house-door-fill me-2"></i>
                 <span class="poppins-medium">Dashboard</span>
             </a>
         </li>
@@ -20,19 +20,19 @@
             <li class="nav-header text-secondary mt-3">MANAJEMEN DATA</li>
             <li>
                 <a href="/admin-dashboard/produk" class="nav-link nav-link-hover {{ $title == 'Data Produk' ? 'active' : '' }}" aria-current="page">
-                    <i class="bi bi-layout-text-window-reverse me-2"></i>
+                    <i class="bi bi-box-fill me-2"></i>
                     <span class="poppins-medium">Data Produk</span>
                 </a>
             </li>
             <li>
                 <a href="/admin-dashboard/akun-user" class="nav-link nav-link-hover {{ $title == 'Data Akun User' ? 'active' : '' }}" aria-current="page">
-                    <i class="bi bi-layout-text-window-reverse me-2"></i>
+                    <i class="bi bi-people-fill me-2"></i>
                     <span class="poppins-medium">Data Akun</span>
                 </a>
             </li>
             <li>
                 <a href="/admin-dashboard/data-lokasi" class="nav-link nav-link-hover {{ $title == 'Data Lokasi' ? 'active' : '' }}" aria-current="page">
-                    <i class="bi bi-layout-text-window-reverse me-2"></i>
+                    <i class="bi bi-geo-alt-fill me-2"></i>
                     <span class="poppins-medium">Data Lokasi</span>
                 </a>
             </li>
@@ -55,7 +55,7 @@
         <li class="nav-header text-secondary mt-3">CETAK</li>
         <li>
             <a href="{{ route('cetak_laporan') }}" class="nav-link nav-link-hover }}">
-                <i class="bi bi-grid-fill me-2"></i>
+                <i class="bi bi-printer-fill me-2"></i>
                 <span class="poppins-medium">Cetak Laporan</span>
             </a>
         </li>

@@ -3,7 +3,7 @@
 
 @section('content')  
 
-    <main class="container mt-3">
+    <main class="container mt-3 mb-3">
 
         @include('partials.log-navbar')
 
@@ -19,37 +19,117 @@
 
         <div class="card shadow border-0 mt-3">
             <div class="card-body">
-                <div id="container" style="width: 100%"></div>
+                <div id="chart-pengecer-container" style="height: 400px; margin: 20px;"></div>
+            </div>
+        </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const chart = Highcharts.chart('container', {
-                            chart: {
-                                type: 'line'
-                            },
-                            title: {
-                                text: 'Rata-Rata Harga Produk Tingkat Pedagang Pengecer'
-                            },
-                            xAxis: {
-                                categories: @json($data['categories']),
-                                title: {
-                                    text: 'Months'
-                                }
-                            },
-                            yAxis: {
-                                min: 0,
-                                title: {
-                                    text: 'Price (Kg)',
-                                    align: 'high'
-                                }
-                            },
-                            series: @json($data['series']) // Multiple series for each food item
-                        });
+        <div class="card shadow border-0 mt-3">
+            <div class="card-body">
+                <div id="chart-grosir-container" style="height: 400px; margin: 20px;"></div>
+            </div>
+        </div>
 
-                    });
-                </script>
-
+        <div class="card shadow border-0 mt-3">
+            <div class="card-body">
+                <div id="chart-produsen-container" style="height: 400px; margin: 20px;"></div>
             </div>
         </div>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the current month name
+            var monthName = new Date().toLocaleString('default', { month: 'long' });
+
+            var chartData = @json($chartData);
+            var datesFormatted = @json($datesFormatted);
+
+            if (chartData.pengecer && chartData.pengecer.length) {
+                Highcharts.chart('chart-pengecer-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Pengecer)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.pengecer
+                });
+            }
+
+            if (chartData.grosir && chartData.grosir.length) {
+                Highcharts.chart('chart-grosir-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Grosir)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.grosir
+                });
+            }
+
+            if (chartData.produsen && chartData.produsen.length) {
+                Highcharts.chart('chart-produsen-container', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Kenaikan dan Penurunan Harga Produk (Produsen)'
+                    },
+                    subtitle: {
+                        text: monthName + ' ' + new Date().getFullYear()
+                    },
+                    xAxis: {
+                        categories: datesFormatted,
+                        title: {
+                            text: 'Tanggal'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Harga (Rp)'
+                        },
+                        min: 0,
+                        max: 120000,
+                        tickInterval: 20000
+                    },
+                    series: chartData.produsen
+                });
+            }
+        });
+    </script>
 @endsection

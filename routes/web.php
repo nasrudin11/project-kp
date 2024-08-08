@@ -11,12 +11,15 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\DataLaporanProdukController;
+use App\Http\Controllers\LandingController;
 
-Route::get('/', function () {
-    return view('/layouts/main',  ['title' => 'Home Page']);
-});
+Route::get('/', [LandingController::class, 'index']);
 
 Route::middleware('guest')->group(function () {
+ 
+    Route::get('/data-harga', [LandingController::class, 'data_harga'])->name('data-harga');
+    Route::get('/data-pasokan', [LandingController::class, 'data_pasokan'])->name('data-pasokan');
+    Route::post('/data-harga', [LandingController::class, 'handleData'])->name('handle-filter');
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login', [LoginController::class, 'authenticate']);
 });
@@ -76,7 +79,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'index'])->name('admin-dashboard.data-harga');
 
     // Route untuk menangani permintaan data
-    Route::post('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'handleData'])->name('handle-data');
+    Route::post('/admin-dashboard/data-harga/filter', [DataLaporanProdukController::class, 'handleData'])->name('handle-data');
 
     Route::get('/admin-dashboard/data-harga/form', [DataLaporanProdukController::class, 'form_input'])->name('form.input.laporan');
     Route::post('/admin-dashboard/data-harga/store', [DataLaporanProdukController::class, 'store_admin'])->name('laporan.store');
@@ -84,12 +87,9 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::put('/admin-dashboard/data-pasokan/update', [DataLaporanProdukController::class, 'update_pasokan'])->name('update_pasokan');
 
 
-
     // Data Pasokan
     Route::get('/admin-dashboard/data-pasokan', [DataLaporanProdukController::class, 'index_pasokan'])->name('admin-dashboard.data-pasokan');
-    // Route::get('/admin-dashboard/data-pasokan', function (){
-    //     return view('/dashboard/admin/data-pasokan', ['title' => 'Data Pasokan']);
-    // });
+
 
     // Lihat dan Update Profile Administrator
     Route::get('/admin-dashboard/profile', function (){
@@ -105,28 +105,14 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 
     
-    Route::middleware('web')->group(function () {
-        Route::put('/api/update-lokasi', [LokasiController::class, 'updateLokasi']);
-        Route::delete('/api/delete-lokasi/{id}', [LokasiController::class, 'deleteLokasi']);
-    });
+    // Route::middleware('web')->group(function () {
+    //     Route::put('/api/update-lokasi', [LokasiController::class, 'updateLokasi']);
+    //     Route::delete('/api/delete-lokasi/{id}', [LokasiController::class, 'deleteLokasi']);
+    // });
 });
 
 Route::get('/generate-pdf', [ReportController::class, 'generatePdf'])->name('cetak_laporan');
 
-
-// Route::get('/dashboard', [ChartController::class, 'showChart']);
-// Route::get('/admin-dashboard', [ChartController::class, 'showChart']);
-
-
-
-// // Data produk
-// Route::get('/admin-dashboard/produk', [ProdukController::class, 'index'])->name('produk.index');
-// Route::post('/admin-dashboard/tambah-produk', [ProdukController::class, 'store'])->name('produk.store');
-// Route::put('/admin-dashboard/update-produk{id}', [ProdukController::class, 'update'])->name('produk.update');
-// Route::delete('/admin-dashboard/delete-produk{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
-
-// web.php
-// Route::get('/admin-dashboard/data-harga', [DataLaporanProdukController::class, 'index'])->name('data-harga');
 
 
 

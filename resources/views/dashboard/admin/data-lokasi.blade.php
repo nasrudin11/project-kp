@@ -45,7 +45,7 @@
 
                     <!-- Modal Tambah Pasar -->
                     <div class="modal fade" id="tambahModalPasar" tabindex="-1" aria-labelledby="tambahModalPasarLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="tambahModalPasarLabel">Tambah Data Pasar</h5>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
 
-
+                    <!-- Tabel Data Pasar -->
                     <table id="pasar-table" class="table table-striped mt-4">
                         <thead class="table-primary align-middle">
                             <tr>
@@ -113,7 +113,7 @@
                                 <!-- Edit Modal Pasar -->
                                 <div class="modal fade" id="editModalPasar{{ $pasar->id_pasar }}" tabindex="-1" aria-labelledby="editModalPasarLabel{{ $pasar->id_pasar }}" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content modal-dialog-centered">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalPasarLabel{{ $pasar->id_pasar }}">Edit Data Pasar</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -153,7 +153,7 @@
 
                                 <!-- Confirm Delete Modal Pasar -->
                                 <div class="modal fade" id="confirmDeletePasar{{ $pasar->id_pasar }}" tabindex="-1" aria-labelledby="confirmDeletePasarLabel{{ $pasar->id_pasar }}" aria-hidden="true">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="confirmDeletePasarLabel{{ $pasar->id_pasar }}">Konfirmasi Hapus Data Pasar</h5>
@@ -192,7 +192,7 @@
 
                     <!-- Modal Tambah Kecamatan -->
                     <div class="modal fade" id="tambahModalKecamatan" tabindex="-1" aria-labelledby="tambahModalKecamatanLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="tambahModalKecamatanLabel">Tambah Data Kecamatan</h5>
@@ -218,7 +218,7 @@
                         </div>
                     </div>
 
-                    
+                    <!-- Tabel Data Kecamatan -->
                     <table id="kecamatan-table" class="table table-striped mt-4">
                         <thead class="table-primary align-middle">
                             <tr>
@@ -247,8 +247,8 @@
                                 
                                 <!-- Edit Modal Kecamatan -->
                                 <div class="modal fade" id="editModalKecamatan{{ $kecamatan->id_kecamatan }}" tabindex="-1" aria-labelledby="editModalKecamatanLabel{{ $kecamatan->id_kecamatan }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content ">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalKecamatanLabel{{ $kecamatan->id_kecamatan }}">Edit Data Kecamatan</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -276,7 +276,7 @@
 
                                 <!-- Confirm Delete Modal Kecamatan -->
                                 <div class="modal fade" id="confirmDeleteKecamatan{{ $kecamatan->id_kecamatan }}" tabindex="-1" aria-labelledby="confirmDeleteKecamatanLabel{{ $kecamatan->id_kecamatan }}" aria-hidden="true">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="confirmDeleteKecamatanLabel{{ $kecamatan->id_kecamatan }}">Konfirmasi Hapus Data Kecamatan</h5>
