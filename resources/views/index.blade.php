@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container-fluid m-0 p-0">
-        <div id="carouselExampleCaptions" class="carousel slide ">
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -34,7 +34,6 @@
             </div>
         </div>
     </div>
-    
 
     <main class="container mt-5 mb-5">   
 
@@ -42,55 +41,66 @@
             <h5>Data Tingkat Pengecer</h5>
             <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
             <div class="scrollimage mt-3">
-                @foreach($dataPengecer as $komoditi => $items)
-                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
-                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
-                             class="card-img-top" 
-                             alt="{{ $komoditi }}" 
-                             style="height: 150px; object-fit: cover; width: 100%;">
-                        <div class="card-body" style="height: 100px; overflow: hidden;">
-                            <p class="card-title">{{ $komoditi }}</p>
-                        </div>
+                @foreach($dataPengecer as $item)
+                <div class="card border-0 me-2 ms-2 shadow">
+                    <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/400x200' }}" 
+                        class="card-img-top" 
+                        alt="{{ $item->komoditi }}">
+                    <div class="card-img-overlay">
+                        <p class="card-title text-light shadow">{{ $item->komoditi }}</p>
                     </div>
-                @endforeach
+                    <div class="card-body">
+                        <p class="mb-1">Terendah: Rp {{ number_format($item->harga_rata_rata_terendah, 0, ',', '.') }}</p>
+                        <p class="mb-1">Tertinggi: Rp {{ number_format($item->harga_rata_rata_tertinggi, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+            @endforeach
             </div>   
         </div>
         
+        
 
         <div class="container mt-4 p-0">
-            <h5>Data Tingkat Grosir</h3>
+            <h5>Data Tingkat Grosir</h5>
             <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
-            <div class="scrollimage mt-3 pb-4">
-                @foreach($dataPengecer as $komoditi => $items)
-                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
-                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
+            <div class="scrollimage mt-3">
+                @foreach($dataGrosir as $item)
+                    <div class="card border-0 me-2 ms-2 shadow">
+                        <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/400x200' }}" 
                             class="card-img-top" 
-                            alt="{{ $komoditi }}" 
-                            style="height: 150px; object-fit: cover; width: 100%;">
-                        <div class="card-body" style="height: 100px; overflow: hidden;">
-                            <p class="card-title">{{ $komoditi }}</p>
+                            alt="{{ $item->komoditi }}">
+                        <div class="card-img-overlay">
+                            <p class="card-title text-light shadow">{{ $item->komoditi }}</p>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1">Terendah: Rp {{ number_format($item->harga_rata_rata_terendah, 0, ',', '.') }}</p>
+                            <p class="mb-1">Tertinggi: Rp {{ number_format($item->harga_rata_rata_tertinggi, 0, ',', '.') }}</p>
                         </div>
                     </div>
                 @endforeach
-            </div>
-            
+            </div>           
         </div>
+        
+        
 
         <div class="container mt-4 p-0">
             <h5>Data Tingkat Produsen</h3>
             <span>Tanggal {{ \Carbon\Carbon::now()->format('d F Y') }}</span>
-            <div class="scrollimage mt-3 pb-4">
-                @foreach($dataProdusen as $komoditi => $items)
-                    <div class="card border-0 me-4 shadow" style="width: 220px; height: 220px;">
-                        <img src="{{ $items->first()->gambar ? asset('storage/' . $items->first()->gambar) : 'https://via.placeholder.com/400x200' }}" 
-                            class="card-img-top" 
-                            alt="{{ $komoditi }}" 
-                            style="height: 150px; object-fit: cover; width: 100%;">
-                        <div class="card-body" style="height: 100px; overflow: hidden;">
-                            <p class="card-title">{{ $komoditi }}</p>
-                        </div>
+            <div class="scrollimage mt-3">
+                @foreach($dataProdusen as $item)
+                <div class="card border-0 me-2 ms-2 shadow">
+                    <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://via.placeholder.com/400x200' }}" 
+                        class="card-img-top" 
+                        alt="{{ $item->komoditi }}">
+                    <div class="card-img-overlay">
+                        <p class="card-title text-light shadow">{{ $item->komoditi }}</p>
                     </div>
-                @endforeach
+                    <div class="card-body">
+                        <p class="mb-1">Terendah: Rp {{ number_format($item->harga_rata_rata_terendah, 0, ',', '.') }}</p>
+                        <p class="mb-1">Tertinggi: Rp {{ number_format($item->harga_rata_rata_tertinggi, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+            @endforeach
             </div>
         </div>
 

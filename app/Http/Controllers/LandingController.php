@@ -19,47 +19,109 @@ class LandingController extends Controller
         $currentMonthName = Carbon::now()->format('F Y');
         $currentYear = Carbon::now()->format('Y');
         $dates = $this->getWeeklyDates($currentMonth);
-    
-        // Rata-rata harga pengecer
-        $dataPengecer = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
-            ->where('harga_produk.tipe_harga', 'pengecer')
-            ->where(function($query) {
-                $query->where('produk.target', 'Pedagang')
-                    ->orWhere('produk.target', 'Keduanya');
-            })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
-            ->get()
-            ->groupBy('komoditi');
-            
-    
-        // Rata-rata harga grosir
-        $dataGrosir = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
-            ->where('harga_produk.tipe_harga', 'grosir')
-            ->where(function($query) {
-                $query->where('produk.target', 'Pedagang')
-                    ->orWhere('produk.target', 'Keduanya');
-            })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
-            ->get()
-            ->groupBy('komoditi');
 
-        // Rata-rata harga grosir
-        $dataProdusen = Produk::leftJoin('harga_produk', 'produk.id_produk', '=', 'harga_produk.id_produk')
-            ->leftJoin('users', 'harga_produk.id_user', '=', 'users.id')
-            ->select('produk.id_produk', 'produk.nama_produk as komoditi', 'produk.gambar', 'harga_produk.pasokan', 'users.id_pasar')
-            ->where('harga_produk.tipe_harga', 'produsen')
-            ->where(function($query) {
-                $query->where('produk.target', 'Produsen')
-                    ->orWhere('produk.target', 'Keduanya');
-            })
-            ->groupBy('produk.id_produk', 'produk.nama_produk', 'produk.gambar', 'users.id_pasar', 'harga_produk.pasokan')
-            ->get()
-            ->groupBy('komoditi');
-    
+        // Harga Pengecer
+        $dataPengecer = DB::table(DB::raw('(
+            SELECT 
+                produk.id_produk, 
+                produk.nama_produk AS komoditi, 
+                produk.gambar,
+                MIN(harga_produk.harga) AS harga_terendah,
+                MAX(harga_produk.harga) AS harga_tertinggi
+            FROM 
+                produk
+            LEFT JOIN 
+                harga_produk ON produk.id_produk = harga_produk.id_produk
+            LEFT JOIN 
+                users ON harga_produk.id_user = users.id
+            WHERE 
+                harga_produk.tipe_harga = "pengecer"
+                AND (produk.target = "Pedagang" OR produk.target = "Keduanya")
+                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
+                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
+            GROUP BY 
+                produk.id_produk, 
+                produk.nama_produk, 
+                produk.gambar
+        ) AS HargaPengecer'))
+        ->select(
+            'id_produk',
+            'komoditi',
+            'gambar',
+            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
+            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
+        )
+        ->groupBy('id_produk', 'komoditi', 'gambar')
+        ->get();
+        
+        // Data Grosir
+        $dataGrosir = DB::table(DB::raw('(
+            SELECT 
+                produk.id_produk, 
+                produk.nama_produk AS komoditi, 
+                produk.gambar,
+                MIN(harga_produk.harga) AS harga_terendah,
+                MAX(harga_produk.harga) AS harga_tertinggi
+            FROM 
+                produk
+            LEFT JOIN 
+                harga_produk ON produk.id_produk = harga_produk.id_produk
+            LEFT JOIN 
+                users ON harga_produk.id_user = users.id
+            WHERE 
+                harga_produk.tipe_harga = "grosir"
+                AND (produk.target = "Pedagang" OR produk.target = "Keduanya")
+                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
+                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
+            GROUP BY 
+                produk.id_produk, 
+                produk.nama_produk, 
+                produk.gambar
+        ) AS HargaGrosir'))
+        ->select(
+            'id_produk',
+            'komoditi',
+            'gambar',
+            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
+            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
+        )
+        ->groupBy('id_produk', 'komoditi', 'gambar')
+        ->get();
+        
+        // Harga Produsen
+        $dataProdusen = DB::table(DB::raw('(
+            SELECT 
+                produk.id_produk, 
+                produk.nama_produk AS komoditi, 
+                produk.gambar,
+                MIN(harga_produk.harga) AS harga_terendah,
+                MAX(harga_produk.harga) AS harga_tertinggi
+            FROM 
+                produk
+            LEFT JOIN 
+                harga_produk ON produk.id_produk = harga_produk.id_produk
+            LEFT JOIN 
+                users ON harga_produk.id_user = users.id
+            WHERE 
+                harga_produk.tipe_harga = "produsen"
+                AND (produk.target = "Produsen" OR produk.target = "Keduanya")
+                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
+                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
+            GROUP BY 
+                produk.id_produk, 
+                produk.nama_produk, 
+                produk.gambar
+        ) AS HargaProdusen'))
+        ->select(
+            'id_produk',
+            'komoditi',
+            'gambar',
+            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
+            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
+        )
+        ->groupBy('id_produk', 'komoditi', 'gambar')
+        ->get();
+
         return view('index', [
             'title' => 'Home Page', 
             'dataPengecer' => $dataPengecer,

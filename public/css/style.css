@@ -141,16 +141,51 @@ body{
 }
 
 
-.scrollimage{
-  overflow: auto;
+.scrollimage {
+  overflow-x: auto;
   white-space: nowrap;
 }
 
-.scrollimage .card{
+.scrollimage .card {
   display: inline-block;
   text-align: center;
-  text-decoration: none;
+  width: 220px; /* Ensure card has a fixed width */
+  height: fit-content; /* Ensure card has a fixed height */
+  overflow: hidden;
+  position: relative;
+  margin: 10px; /* Add margin if needed for spacing */
 }
+
+.scrollimage .card-img-top {
+  height: 120px; /* Set height of the image */
+  object-fit: cover; /* Ensure image covers the area */
+  width: 100%; /* Full width of the card */
+}
+
+.scrollimage .card-body {
+  height: calc(100% - 120px); /* Remaining height for the body */
+  overflow: hidden; /* Hide overflowing content */
+  box-sizing: border-box; /* Include padding and border in the height */
+  text-align: left; /* Align text to the left */
+}
+
+.scrollimage .card-title {
+  font-size: 1rem; /* Adjust font size as needed */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflow */
+}
+
+.scrollimage .card-body p {
+  font-size: 15px; /* Font size for paragraphs */
+  margin: 0; /* Remove default margin */
+  line-height: 1.4; /* Adjust line height for readability */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: normal; /* Allow text to wrap to the next line */
+}
+
+
 
 /* .scrollimage img:hover{
   background-color: aliceblue;
@@ -173,8 +208,33 @@ body{
   .logo-img {
     height: 50px;
   }
+  
   .carousel-item img {
-      height: 300px; /* Ubah sesuai kebutuhan */
+    height: 200px; /* Adjust as needed */
+  }
+
+  .scrollimage .card {
+    width: 150px; /* Adjust card width for mobile */
+    height: fit-content; /* Adjust card height for mobile */
+  }
+
+  .scrollimage .card-img-top {
+    height: 100px; /* Adjust image height for mobile */
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .scrollimage .card-body {
+    font-size: 12px; /* Adjust font size for mobile */
+  }
+
+  .scrollimage .card-title {
+    font-size: 0.875rem; /* Adjust title font size for mobile */
+  }
+
+  .scrollimage .card-body p {
+    font-size: 12px; /* Adjust paragraph font size for mobile */
   }
 }
+
 
