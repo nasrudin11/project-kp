@@ -134,7 +134,6 @@ class LandingController extends Controller
         ]);
     }
     
-
     public function data_harga(Request $request)
     {
         $pasars = Pasar::all();
@@ -252,6 +251,11 @@ class LandingController extends Controller
             'active_tab' => $activeTab,
             'title' => 'Data Pasokan'
         ]);
+    }
+
+    public function download()
+    {
+        return view('download', ['title' => 'Download']);
     }
 
     private function getDataPasar(Request $request)

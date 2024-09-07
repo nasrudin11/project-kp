@@ -54,11 +54,12 @@
         <!-- Laporan Section -->
         <li class="nav-header text-secondary mt-3">CETAK</li>
         <li>
-            <a href="{{ route('cetak_laporan') }}" class="nav-link nav-link-hover }}">
+            <a href="#" class="nav-link nav-link-hover" data-bs-toggle="modal" data-bs-target="#modalPilihTanggal">
                 <i class="bi bi-printer-fill me-2"></i>
                 <span class="poppins-medium">Cetak Laporan</span>
             </a>
         </li>
+        
     </ul>
 </div>
 
@@ -139,3 +140,25 @@
         </ul>
     </div>
 </div>
+
+<!-- Modal Pilih Tanggal -->
+<div class="modal fade" id="modalPilihTanggal" tabindex="-1" aria-labelledby="modalPilihTanggalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPilihTanggalLabel">Pilih Tanggal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('cetak_laporan') }}" method="GET">
+                    <div class="mb-3">
+                        <label for="tanggal" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cetak Laporan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

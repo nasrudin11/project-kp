@@ -36,10 +36,18 @@
             text-align: left;
         }
 
+        .text-right {
+        text-align: right;
+        }
+
+        .date-footer {
+            margin-top: 20px; /* Atur jarak antara tabel dan footer jika diperlukan */
+        }
+
     </style>
 </head>
 <body>
-    <h4>DAFTAR HARGA PANGAN POKOK TINGKAT PEDAGANG PENGECER PASAR <br>
+    <h4>DAFTAR HARGA PANGAN POKOK TINGKAT PEDAGANG GROSIR PASAR <br>
         DI KABUPATEN LAMONGAN
         </h4>
     <table>
@@ -47,7 +55,7 @@
             <tr>
                 <th rowspan="2">NO</th>
                 <th rowspan="2">KOMODITI</th>
-                <th colspan="10">Kamis, 5 Agustus 2024</th>
+                <th colspan="10">{{ $formattedHeaderDate }}</th>
             </tr>
             <tr>
                 @foreach ($pasars as $pasar)
@@ -78,14 +86,14 @@
     <!-- Pemisah Halaman -->
     <div class="page-break"></div>
 
-    <h4>DAFTAR PASOKAN PANGAN POKOK TINGKAT PENGECER GROSIR PASAR <br>
+    <h4>DAFTAR PASOKAN PANGAN POKOK TINGKAT PEDAGANG GROSIR PASAR <br>
         DI KABUPATEN LAMONGAN</h4>
     <table>
         <thead>
             <tr>
                 <th rowspan="2">NO</th>
                 <th rowspan="2">KOMODITI</th>
-                <th colspan="9">Kamis, 5 Agustus 2024</th>
+                <th colspan="9">{{ $formattedHeaderDate }}</th>
             </tr>
             <tr>
                 @foreach ($pasars as $pasar)
@@ -116,6 +124,9 @@
         </tbody>
     </table>
 
+    <p class="text-right date-footer">
+        Lamongan, {{ $formattedFooterDate }}
+    </p>
 
 
 </body>

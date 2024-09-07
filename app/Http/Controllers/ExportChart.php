@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Carbon\Carbon;
 use App\Models\HargaProduk;
+
 use Illuminate\Http\Request;
 
-class AdminDashboardController extends Controller
+class ExportChart extends Controller
 {
     public function index() {
         $data = [];
@@ -51,8 +51,6 @@ class AdminDashboardController extends Controller
             return Carbon::parse($date)->format('d M');
         }, $dates);
         
-        return view('dashboard.admin.index', compact('chartData', 'datesFormatted'), ['title' => 'Dashboard']);
+        return view('pdf.chart', compact('chartData', 'datesFormatted'), ['title' => 'Dashboard']);
     }
-    
-    
 }

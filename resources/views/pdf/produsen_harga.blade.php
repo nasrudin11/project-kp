@@ -36,6 +36,14 @@
             text-align: left;
         }
 
+        .text-right {
+        text-align: right;
+        }
+
+        .date-footer {
+            margin-top: 20px; /* Atur jarak antara tabel dan footer jika diperlukan */
+        }
+
     </style>
 </head>
 <body>
@@ -47,7 +55,7 @@
             <tr>
                 <th rowspan="2">NO</th>
                 <th rowspan="2">KOMODITI</th>
-                <th colspan="12">Kamis, 5 Agustus 2024</th>
+                <th colspan="12">{{ $formattedHeaderDate }}</th>
             </tr>
             <tr>
                 @foreach ($kecamatans as $kecamatan)
@@ -75,5 +83,8 @@
         </tbody>
     </table>
 
+    <p class="text-right date-footer">
+        Lamongan, {{ $formattedFooterDate }}
+    </p>
 </body>
 </html>

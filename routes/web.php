@@ -11,15 +11,19 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\DataLaporanProdukController;
+use App\Http\Controllers\ExportChart;
 use App\Http\Controllers\LandingController;
 
 Route::get('/', [LandingController::class, 'index']);
+Route::get('/chart', [ExportChart::class, 'index']);
+
 
 Route::middleware('guest')->group(function () {
  
     Route::get('/data-harga', [LandingController::class, 'data_harga'])->name('data-harga');
     Route::get('/data-pasokan', [LandingController::class, 'data_pasokan'])->name('data-pasokan');
     Route::post('/data-harga', [LandingController::class, 'handleData'])->name('handle-filter');
+    Route::get('/download', [LandingController::class, 'download'])->name('download');
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login', [LoginController::class, 'authenticate']);
 });
