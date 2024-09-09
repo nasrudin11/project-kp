@@ -4,47 +4,59 @@
     <title>PDF Report</title>
     <style>
         @page {
-            margin: 20mm;
+            margin: 20mm; 
         }
-
+    
+        body {
+            font-size: 14px; 
+        }
+    
         table {
             width: 100%;
             border-collapse: collapse;
         }
+    
         table, th, td {
             border: 1px solid black;
         }
+    
         th, td {
             text-align: center;
+            padding: 5px; 
         }
+    
         th {
             background-color: #f2f2f2;
         }
+    
         h4, h5 {
             text-align: center;
-            margin-bottom: 20px;
+            margin: 10px 0; 
         }
+    
         p {
-            margin-top: 20px; 
-            margin-bottom: 20px; /* Optional: Add bottom margin for spacing */
+            margin-top: 20px;
+            margin-bottom: 20px;
             text-align: right;
         }
+    
         .page-break {
             page-break-before: always;
         }
-        .text-left{
+    
+        .text-left {
             text-align: left;
         }
-
+    
         .text-right {
-        text-align: right;
+            text-align: right;
         }
-
+    
         .date-footer {
-            margin-top: 20px; /* Atur jarak antara tabel dan footer jika diperlukan */
+            margin-top: 20px;
         }
-
     </style>
+    
 </head>
 <body>
     <h4>DAFTAR HARGA PANGAN POKOK TINGKAT PRODUSEN <br>

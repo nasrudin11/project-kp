@@ -7,8 +7,12 @@
             margin: 20mm;
         }
 
+        body{
+            font-size: 14px;
+        }
+
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
     </style>
 </head>

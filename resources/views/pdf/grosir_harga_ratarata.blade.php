@@ -7,32 +7,44 @@
             margin: 20mm;
         }
 
+        body {
+            font-size: 14px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         table, th, td {
             border: 1px solid black;
         }
+
         th, td {
             text-align: center;
+            padding: 5px; /* Tambahkan padding untuk meningkatkan keterbacaan */
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         h4, h5 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Kurangi margin untuk memanfaatkan ruang vertikal */
         }
+
         p {
-            margin-top: 20px; 
-            margin-bottom: 20px; /* Optional: Add bottom margin for spacing */
+            margin-top: 20px;
+            margin-bottom: 20px;
             text-align: right;
         }
+
         .page-break {
             page-break-before: always;
         }
-        .text-left{
+
+        .text-left {
             text-align: left;
         }
 
@@ -42,37 +54,25 @@
         }
 
         .text-right {
-        text-align: right;
+            text-align: right;
         }
 
         .date-footer {
-            margin-top: 20px; /* Atur jarak antara tabel dan footer jika diperlukan */
+            margin-top: 20px;
         }
-
     </style>
 </head>
 <body>
     <h4>DAFTAR HARGA TINGKAT PEDAGANG GROSIR PASAR <br>
         DI KABUPATEN LAMONGAN
-        </h4>
-
-    {{-- <td>
-        @php
-            $gambar = $rows->first()->gambar; // Ambil gambar dari elemen pertama dalam koleksi
-            // $url = asset('storage/' . $gambar);
-            // dd($url); // Tampilkan URL lengkap untuk memeriksa apakah benar
-        @endphp
-        <img src="{{ 'storage/' . $gambar }}" alt="Gambar Produk" class="product-image">
-
-    
-    </td>    --}}
+    </h4>
 
     <table>
         <thead>
             <tr>
                 <th rowspan="2">NO</th>
                 <th rowspan="2">KOMODITI</th>
-                <th colspan="3">Harga Rata-Rata (Rp/Kg)</th>
+                <th colspan="{{ count($dates) }}">Harga Rata-Rata (Rp/Kg)</th>
             </tr>
             <tr>
                 @foreach ($dates as $date)
@@ -97,7 +97,6 @@
                     @endforeach
                 </tr>
             @endforeach
-
         </tbody>
     </table>
 

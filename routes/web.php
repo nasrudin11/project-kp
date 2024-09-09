@@ -116,6 +116,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 });
 
 Route::get('/generate-pdf', [ReportController::class, 'generatePdf'])->name('cetak_laporan');
+Route::get('/generate-pdf-pedagang', [ReportController::class, 'generatePdfPedagang'])->name('cetak_laporan_detail');
 
 
 

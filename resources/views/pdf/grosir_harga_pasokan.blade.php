@@ -7,49 +7,61 @@
             margin: 20mm;
         }
 
+        body {
+            font-size: 14px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         table, th, td {
             border: 1px solid black;
         }
+
         th, td {
             text-align: center;
+            padding: 5px; /* Tambahkan padding untuk meningkatkan keterbacaan */
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         h4, h5 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Kurangi margin untuk memanfaatkan ruang vertikal */
         }
+
         p {
             margin-top: 20px; 
-            margin-bottom: 20px; /* Optional: Add bottom margin for spacing */
+            margin-bottom: 20px; 
             text-align: right;
         }
+
         .page-break {
             page-break-before: always;
         }
-        .text-left{
+
+        .text-left {
             text-align: left;
         }
 
         .text-right {
-        text-align: right;
+            text-align: right;
         }
 
         .date-footer {
-            margin-top: 20px; /* Atur jarak antara tabel dan footer jika diperlukan */
+            margin-top: 20px;
         }
-
     </style>
 </head>
 <body>
     <h4>DAFTAR HARGA PANGAN POKOK TINGKAT PEDAGANG GROSIR PASAR <br>
         DI KABUPATEN LAMONGAN
-        </h4>
+    </h4>
+    
     <table>
         <thead>
             <tr>
@@ -88,6 +100,7 @@
 
     <h4>DAFTAR PASOKAN PANGAN POKOK TINGKAT PEDAGANG GROSIR PASAR <br>
         DI KABUPATEN LAMONGAN</h4>
+    
     <table>
         <thead>
             <tr>
@@ -115,7 +128,7 @@
                             @if($pasokan)
                                 {{ $pasokan->pasokan }}
                             @else
-                            -
+                                -
                             @endif
                         </td>
                     @endforeach
@@ -127,7 +140,5 @@
     <p class="text-right date-footer">
         Lamongan, {{ $formattedFooterDate }}
     </p>
-
-
 </body>
 </html>
