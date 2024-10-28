@@ -23,4 +23,10 @@ class Produk extends Model
     {
         return $this->hasMany(HargaProduk::class, 'id_produk', 'id_produk');
     }
+
+    public function hasRelations()
+    {
+        // Periksa apakah ada relasi dengan tabel harga_produk
+        return $this->hargaProduk()->exists();
+    }
 }

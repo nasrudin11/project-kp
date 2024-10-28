@@ -9,12 +9,10 @@ class HargaProduk extends Model
 {
     use HasFactory;
 
-    // Nama tabel yang digunakan oleh model ini
     protected $table = 'harga_produk';
 
     protected $primaryKey = 'id_harga';
 
-    // Kolom yang dapat diisi secara massal
     protected $fillable = [
         'id_produk',
         'harga',
@@ -26,10 +24,8 @@ class HargaProduk extends Model
         'tipe_harga', 
     ];
 
-    // Jika Anda menggunakan timestamp untuk created_at dan updated_at
     public $timestamps = false;
 
-    // Harga.php
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');

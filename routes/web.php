@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::post('/admin-dashboard/tambah-produk', [ProdukController::class, 'store'])->name('produk.store');
     Route::put('/admin-dashboard/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update');
     Route::delete('/admin-dashboard/produk/delete/{id}', [ProdukController::class, 'delete'])->name('produk.destroy');
-    Route::delete('/api/delete-produk/{id}', [ProdukController::class, 'deleteProduk']);
+    // Route::delete('/api/delete-produk/{id}', [ProdukController::class, 'deleteProduk']);
 
     // Data akun user
     Route::get('/admin-dashboard/akun-user', [UserController::class, 'index'])->name('user.index');

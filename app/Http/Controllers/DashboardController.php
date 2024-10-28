@@ -78,6 +78,5 @@ class DashboardController extends Controller
     
         return view('dashboard.user.index', compact('chartData', 'datesFormatted', 'role'), ['title' => 'Dashboard']);
     }
-    
-    
+      
 }

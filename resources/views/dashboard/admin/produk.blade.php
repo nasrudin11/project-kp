@@ -110,13 +110,14 @@
                                         <button class="btn btn-warning btn-sm shadow" data-bs-toggle="modal" data-bs-target="#editModal{{ $produk->id_produk }}">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                        <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm shadow">
+                                        
+                                        <!-- Tombol Hapus hanya tampil jika produk tidak memiliki relasi terkait -->
+                                        @if(!$produk->hasRelations())
+                                            <button type="button" class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteProdukModal" 
+                                                data-id="{{ $produk->id_produk }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                        </form>
+                                        @endif
 
                                         <!-- Modal Edit -->
                                         <div class="modal fade" id="editModal{{ $produk->id_produk }}" tabindex="-1" aria-labelledby="editModalLabel{{ $produk->id_produk }}" aria-hidden="true">
@@ -159,6 +160,7 @@
                         </tbody>
                     </table>
                 </div>
+
                 
             </div>
         </div>
@@ -184,9 +186,40 @@
         </div>
     </div>
 
+
     <script>
         $(document).ready(function() {
             $('#produkTable').DataTable();
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const deleteProdukModal = document.getElementById('deleteProdukModal');
+        const deleteProdukIdInput = document.getElementById('deleteProdukId');
+        const confirmDeleteProdukButton = document.getElementById('confirmDeleteProdukButton');
+
+        deleteProdukModal.addEventListener('show.bs.modal', function (event) {
+            // Ambil tombol yang memicu modal
+            const button = event.relatedTarget;
+            const produkId = button.getAttribute('data-id');
+
+            // Simpan ID produk di input tersembunyi
+            deleteProdukIdInput.value = produkId;
+        });
+
+        confirmDeleteProdukButton.addEventListener('click', function () {
+            const produkId = deleteProdukIdInput.value;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin-dashboard/produk/delete/${produkId}`;
+            form.innerHTML = `
+                @csrf
+                @method('DELETE')
+            `;
+
+            // Tambahkan dan submit form secara dinamis
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
     </script>
 @endsection

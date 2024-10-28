@@ -103,10 +103,12 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <!-- Trigger modal for delete confirmation -->
-                                        <button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#confirmDeletePasar{{ $pasar->id_pasar }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                         <!-- Trigger modal for delete confirmation only if there are no relations -->
+                                        @if (!$pasar->hasRelations())
+                                            <button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#confirmDeletePasar{{ $pasar->id_pasar }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                                 
@@ -238,10 +240,13 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <!-- Trigger modal for delete confirmation -->
-                                        <button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#confirmDeleteKecamatan{{ $kecamatan->id_kecamatan }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        @if (!$kecamatan->hasRelations())
+
+                                            <!-- Trigger modal for delete confirmation -->
+                                            <button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#confirmDeleteKecamatan{{ $kecamatan->id_kecamatan }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                                 

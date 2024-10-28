@@ -467,18 +467,24 @@ class DataLaporanProdukController extends Controller
             'data.*.satuan_harga' => 'nullable|string',
             'data.*.satuan_pasokan' => 'nullable|string',
             'tipe_harga' => 'required|in:pengecer,grosir,produsen',
-            'tgl_entry' => 'required',
+            'tgl_entry' => 'required|date',
             'id_pasar' => 'nullable|exists:pasar,id_pasar',
             'id_kecamatan' => 'nullable|exists:kecamatan,id_kecamatan',
         ]);
     
-        $tglLaporan = Carbon::now()->format('Y-m-d');
+        $tipeHarga = $request->input('tipe_harga');
+        $tglEntry = Carbon::parse($request->input('tgl_entry'));
     
-        // Initialize id_user variable
+        // Validasi hari Senin atau Kamis untuk tgl_entry
+        if (!in_array($tglEntry->format('l'), ['Monday', 'Thursday'])) {
+            return redirect()->back()
+                ->withErrors(['tgl_entry' => 'Tanggal harus merupakan hari Senin atau Kamis.'], $tipeHarga)
+                ->withInput();
+        }
+    
+        // Tentukan id_user berdasarkan tipe_harga
         $id_user = null;
-    
         if ($request->input('tipe_harga') == 'pengecer' || $request->input('tipe_harga') == 'grosir') {
-            // Retrieve id_user based on id_pasar
             $id_pasar = $request->input('id_pasar');
             $user = DB::table('users')
                 ->join('pasar', 'users.id_pasar', '=', 'pasar.id_pasar')
@@ -489,27 +495,39 @@ class DataLaporanProdukController extends Controller
             if ($user) {
                 $id_user = $user->id;
             } else {
-                return redirect()->back()->with('error', 'User not found for the provided Pasar.');
+                return redirect()->back()->with('error', 'User tidak ditemukan untuk Pasar yang dipilih.');
             }
         } elseif ($request->input('tipe_harga') == 'produsen') {
-            // Retrieve id_user based on id_kecamatan
             $id_kecamatan = $request->input('id_kecamatan');
             $user = DB::table('users')
                 ->join('kecamatan', 'users.id_kecamatan', '=', 'kecamatan.id_kecamatan')
                 ->where('kecamatan.id_kecamatan', $id_kecamatan)
                 ->select('users.id')
                 ->first();
-
-            // dd($user);
     
             if ($user) {
                 $id_user = $user->id;
             } else {
-                return redirect()->back()->with('error', 'User not found for the provided Kecamatan.');
+                return redirect()->back()->with('error', 'User tidak ditemukan untuk Kecamatan yang dipilih.');
             }
         }
+        
+        
+        // Cek apakah ada data pada tanggal yang sama dengan id_user dan tipe_harga yang ditentukan
+        $existingEntry = DB::table('harga_produk')
+            ->where('id_user', $id_user)
+            ->where('tipe_harga', $request->input('tipe_harga'))
+            ->where('tgl_entry', $tglEntry->format('Y-m-d'))
+            ->first();
+        
+        if ($existingEntry) {
+            return redirect()->back()
+            ->withErrors(['tgl_entry' => 'Data untuk tanggal ini sudah ada. Silakan pilih tanggal lain.'], $tipeHarga)
+            ->withInput();
+        }
     
-        // Insert data into harga_produk table
+        // Menyimpan data ke tabel harga_produk jika tidak ada duplikasi
+        $tglLaporan = Carbon::now()->format('Y-m-d');
         $data = $request->input('data', []);
         foreach ($data as $item) {
             DB::table('harga_produk')->insert([
@@ -526,10 +544,11 @@ class DataLaporanProdukController extends Controller
         }
     
         return redirect()->back()->with('success', 'Data berhasil disimpan!');
-    }  
+    }   
 
     public function store(Request $request)
     {
+        // Validasi input dasar
         $request->validate([
             'id_user' => 'required|exists:users,id',
             'data.*.id_produk' => 'required|exists:produk,id_produk',
@@ -538,28 +557,36 @@ class DataLaporanProdukController extends Controller
             'data.*.satuan_harga' => 'nullable|string',
             'data.*.satuan_pasokan' => 'nullable|string',
             'tipe_harga' => 'required|in:pengecer,grosir,produsen',
-            'tgl_entry' => 'required'
+            'tgl_entry' => 'required|date',
         ]);
     
-        // $today = Carbon::now();
+        $tipeHarga = $request->input('tipe_harga');
+        $tglEntry = Carbon::parse($request->input('tgl_entry'));
     
-        // // Menentukan tanggal entry terdekat pada hari Senin atau Kamis dalam minggu yang sama
-        // if ($today->isMonday()) {
-        //     $tglEntry = $today;
-        // } elseif ($today->isThursday()) {
-        //     $tglEntry = $today;
-        // } elseif ($today->isBefore($today->copy()->startOfWeek()->addDays(4))) {
-        //     // Jika hari ini sebelum hari Kamis minggu ini
-        //     $tglEntry = $today->copy()->startOfWeek()->addDays(4); // Kamis minggu ini
-        // } else {
-        //     // Jika hari ini setelah hari Kamis minggu ini
-        //     $tglEntry = $today->copy()->startOfWeek()->addDays(7); // Senin minggu depan
-        // }
-        // $tglEntry = $tglEntry->format('Y-m-d');
+        // Validasi hari Senin atau Kamis untuk tgl_entry
+        if (!in_array($tglEntry->format('l'), ['Monday', 'Thursday'])) {
+            return redirect()->back()
+                ->withErrors(['tgl_entry' => 'Tanggal harus merupakan hari Senin atau Kamis.'], $tipeHarga)
+                ->withInput();
+        }
+    
+        // Cek apakah data untuk tanggal, tipe harga, dan id_user sudah ada
+        $existingData = DB::table('harga_produk')
+            ->where('id_user', $request->input('id_user'))
+            ->where('tgl_entry', $request->input('tgl_entry'))
+            ->where('tipe_harga', $request->input('tipe_harga'))
+            ->exists();
+    
+        if ($existingData) {
+            return redirect()->back()
+                ->withErrors(['tgl_entry' => 'Data untuk tanggal ini sudah ada. Silakan pilih tanggal lain.'], $tipeHarga)
+                ->withInput();
+        }
     
         // Menentukan tanggal pelaporan
         $tglLaporan = Carbon::now()->format('Y-m-d');
     
+        // Proses penyimpanan data
         $data = $request->input('data', []);
         foreach ($data as $item) {
             DB::table('harga_produk')->insert([
@@ -571,12 +598,14 @@ class DataLaporanProdukController extends Controller
                 'satuan_pasokan' => $item['satuan_pasokan'] ?? 'Kg',
                 'tgl_entry' => $request->input('tgl_entry'),
                 'tgl_pelaporan' => $tglLaporan,
-                'tipe_harga' => $request->input('tipe_harga'),
+                'tipe_harga' => $tipeHarga,
             ]);
         }
     
         return redirect()->back()->with('success', 'Data berhasil disimpan!');
     }
+    
+
     
     public function update_harga(Request $request)
     {

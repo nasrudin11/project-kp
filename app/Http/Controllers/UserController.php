@@ -177,7 +177,6 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Profile updated successfully');
     }
     
-    
     public function updatePassword__akunUser(Request $request, $id)
     {
         $user = User::find($id);

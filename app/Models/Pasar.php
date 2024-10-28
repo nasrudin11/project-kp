@@ -13,4 +13,17 @@ class Pasar extends Model
     protected $primaryKey = 'id_pasar';
     protected $fillable = ['nama_pasar', 'alamat_pasar'];
 
+    
+    // Relasi dengan model User
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_pasar', 'id_pasar');
+    }
+
+    // Metode untuk memeriksa apakah pasar memiliki relasi dengan user
+    public function hasRelations()
+    {
+        return $this->users()->exists();
+    }
+
 }

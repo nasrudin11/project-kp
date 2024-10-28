@@ -60,10 +60,15 @@
                         <form action="{{ route('laporan.store') }}" method="POST" class="mt-4">
                             @csrf
                             <input type="hidden" name="tipe_harga" value="pengecer">
+
                             <div class="d-flex">
                                 <div class="mt-3 me-4">
                                     <label for="" class="form-label">Tanggal Entry</label>
-                                    <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                    <input type="date" name="tgl_entry" id="tgl_entry" class="form-control w-auto @error('tgl_entry', 'pengecer') is-invalid @enderror" value="{{ old('tgl_entry', \Carbon\Carbon::now()->format('Y-m-d')) }}">
+                                    
+                                    @error('tgl_entry', 'pengecer')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mt-3">
@@ -137,7 +142,11 @@
                             <div class="d-flex">
                                 <div class="mt-3 me-4">
                                     <label for="" class="form-label">Tanggal Entry</label>
-                                    <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                    <input type="date" name="tgl_entry" id="tgl_entry" class="form-control w-auto @error('tgl_entry', 'grosir') is-invalid @enderror" value="{{ old('tgl_entry', \Carbon\Carbon::now()->format('Y-m-d')) }}">
+                                    
+                                    @error('tgl_entry', 'grosir')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mt-3">
@@ -190,7 +199,11 @@
                             <div class="d-flex">
                                 <div class="mt-3 me-4">
                                     <label for="" class="form-label">Tanggal Entry</label>
-                                    <input type="date" class="form-control w-auto" name="tgl_entry" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                    <input type="date" name="tgl_entry" id="tgl_entry" class="form-control w-auto @error('tgl_entry', 'produsen') is-invalid @enderror" value="{{ old('tgl_entry', \Carbon\Carbon::now()->format('Y-m-d')) }}">
+                                    
+                                    @error('tgl_entry', 'produsen')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mt-3">

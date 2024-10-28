@@ -19,109 +19,89 @@ class LandingController extends Controller
         $currentMonthName = Carbon::now()->format('F Y');
         $currentYear = Carbon::now()->format('Y');
         $dates = $this->getWeeklyDates($currentMonth);
-
-        // Harga Pengecer
-        $dataPengecer = DB::table(DB::raw('(
-            SELECT 
-                produk.id_produk, 
-                produk.nama_produk AS komoditi, 
-                produk.gambar,
-                MIN(harga_produk.harga) AS harga_terendah,
-                MAX(harga_produk.harga) AS harga_tertinggi
-            FROM 
-                produk
-            LEFT JOIN 
-                harga_produk ON produk.id_produk = harga_produk.id_produk
-            LEFT JOIN 
-                users ON harga_produk.id_user = users.id
-            WHERE 
-                harga_produk.tipe_harga = "pengecer"
-                AND (produk.target = "Pedagang" OR produk.target = "Keduanya")
-                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
-                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
-            GROUP BY 
-                produk.id_produk, 
-                produk.nama_produk, 
-                produk.gambar
-        ) AS HargaPengecer'))
-        ->select(
-            'id_produk',
-            'komoditi',
-            'gambar',
-            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
-            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
-        )
-        ->groupBy('id_produk', 'komoditi', 'gambar')
-        ->get();
-        
-        // Data Grosir
-        $dataGrosir = DB::table(DB::raw('(
-            SELECT 
-                produk.id_produk, 
-                produk.nama_produk AS komoditi, 
-                produk.gambar,
-                MIN(harga_produk.harga) AS harga_terendah,
-                MAX(harga_produk.harga) AS harga_tertinggi
-            FROM 
-                produk
-            LEFT JOIN 
-                harga_produk ON produk.id_produk = harga_produk.id_produk
-            LEFT JOIN 
-                users ON harga_produk.id_user = users.id
-            WHERE 
-                harga_produk.tipe_harga = "grosir"
-                AND (produk.target = "Pedagang" OR produk.target = "Keduanya")
-                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
-                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
-            GROUP BY 
-                produk.id_produk, 
-                produk.nama_produk, 
-                produk.gambar
-        ) AS HargaGrosir'))
-        ->select(
-            'id_produk',
-            'komoditi',
-            'gambar',
-            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
-            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
-        )
-        ->groupBy('id_produk', 'komoditi', 'gambar')
-        ->get();
-        
-        // Harga Produsen
-        $dataProdusen = DB::table(DB::raw('(
-            SELECT 
-                produk.id_produk, 
-                produk.nama_produk AS komoditi, 
-                produk.gambar,
-                MIN(harga_produk.harga) AS harga_terendah,
-                MAX(harga_produk.harga) AS harga_tertinggi
-            FROM 
-                produk
-            LEFT JOIN 
-                harga_produk ON produk.id_produk = harga_produk.id_produk
-            LEFT JOIN 
-                users ON harga_produk.id_user = users.id
-            WHERE 
-                harga_produk.tipe_harga = "produsen"
-                AND (produk.target = "Produsen" OR produk.target = "Keduanya")
-                AND MONTH(harga_produk.tgl_entry) = ' . $currentMonth . '
-                AND YEAR(harga_produk.tgl_entry) = ' . $currentYear . '
-            GROUP BY 
-                produk.id_produk, 
-                produk.nama_produk, 
-                produk.gambar
-        ) AS HargaProdusen'))
-        ->select(
-            'id_produk',
-            'komoditi',
-            'gambar',
-            DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
-            DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
-        )
-        ->groupBy('id_produk', 'komoditi', 'gambar')
-        ->get();
-
+    
+        // Fungsi untuk mendapatkan data berdasarkan tipe harga dan waktu tertentu
+        $getData = function ($tipeHarga, $currentMonth, $currentYear) {
+            $data = DB::table(DB::raw("(
+                SELECT 
+                    produk.id_produk, 
+                    produk.nama_produk AS komoditi, 
+                    produk.gambar,
+                    MIN(harga_produk.harga) AS harga_terendah,
+                    MAX(harga_produk.harga) AS harga_tertinggi
+                FROM 
+                    produk
+                LEFT JOIN 
+                    harga_produk ON produk.id_produk = harga_produk.id_produk
+                LEFT JOIN 
+                    users ON harga_produk.id_user = users.id
+                WHERE 
+                    harga_produk.tipe_harga = '$tipeHarga'
+                    AND (produk.target = 'Pedagang' OR produk.target = 'Keduanya')
+                    AND MONTH(harga_produk.tgl_entry) = $currentMonth
+                    AND YEAR(harga_produk.tgl_entry) = $currentYear
+                GROUP BY 
+                    produk.id_produk, 
+                    produk.nama_produk, 
+                    produk.gambar
+            ) AS Harga$tipeHarga"))
+            ->select(
+                'id_produk',
+                'komoditi',
+                'gambar',
+                DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
+                DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
+            )
+            ->groupBy('id_produk', 'komoditi', 'gambar')
+            ->get();
+    
+            // Jika data kosong, ambil data terbaru yang tersedia
+            if ($data->isEmpty()) {
+                $data = DB::table(DB::raw("(
+                    SELECT 
+                        produk.id_produk, 
+                        produk.nama_produk AS komoditi, 
+                        produk.gambar,
+                        MIN(harga_produk.harga) AS harga_terendah,
+                        MAX(harga_produk.harga) AS harga_tertinggi,
+                        YEAR(harga_produk.tgl_entry) AS year,
+                        MONTH(harga_produk.tgl_entry) AS month
+                    FROM 
+                        produk
+                    LEFT JOIN 
+                        harga_produk ON produk.id_produk = harga_produk.id_produk
+                    LEFT JOIN 
+                        users ON harga_produk.id_user = users.id
+                    WHERE 
+                        harga_produk.tipe_harga = '$tipeHarga'
+                        AND (produk.target = 'Pedagang' OR produk.target = 'Keduanya')
+                    GROUP BY 
+                        produk.id_produk, 
+                        produk.nama_produk, 
+                        produk.gambar,
+                        year,
+                        month
+                    ORDER BY 
+                        year DESC, month DESC
+                ) AS Harga$tipeHarga"))
+                ->select(
+                    'id_produk',
+                    'komoditi',
+                    'gambar',
+                    DB::raw('AVG(harga_terendah) AS harga_rata_rata_terendah'),
+                    DB::raw('AVG(harga_tertinggi) AS harga_rata_rata_tertinggi')
+                )
+                ->groupBy('id_produk', 'komoditi', 'gambar')
+                ->get();
+            }
+    
+            return $data;
+        };
+    
+        $dataPengecer = $getData('pengecer', $currentMonth, $currentYear);
+        $dataGrosir = $getData('grosir', $currentMonth, $currentYear);
+        $dataProdusen = $getData('produsen', $currentMonth, $currentYear);
+    
         return view('index', [
             'title' => 'Home Page', 
             'dataPengecer' => $dataPengecer,
@@ -133,6 +113,7 @@ class LandingController extends Controller
             'dates' => $dates
         ]);
     }
+    
     
     public function data_harga(Request $request)
     {
