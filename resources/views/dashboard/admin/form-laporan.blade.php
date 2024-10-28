@@ -9,7 +9,7 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="/admin-dashboard/data-harga">Data Harga</a> - <a href="/admin-dashboard/data-pasokan">Data Pasokan</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Input Data</li>
             </ol>

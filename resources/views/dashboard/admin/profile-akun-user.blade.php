@@ -9,8 +9,8 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 rounded-pill bg-secondary bg-opacity-10 p-2">
-                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="#">Akun User</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Akun User</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Profil {{ $user->name }}</li>
             </ol>
         </nav>
