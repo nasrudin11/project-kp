@@ -479,6 +479,7 @@ class DataLaporanProdukController extends Controller
         if (!in_array($tglEntry->format('l'), ['Monday', 'Thursday'])) {
             return redirect()->back()
                 ->withErrors(['tgl_entry' => 'Tanggal harus merupakan hari Senin atau Kamis.'], $tipeHarga)
+                ->with('error', 'Data gagal disimpan!')
                 ->withInput();
         }
     
@@ -511,8 +512,7 @@ class DataLaporanProdukController extends Controller
                 return redirect()->back()->with('error', 'User tidak ditemukan untuk Kecamatan yang dipilih.');
             }
         }
-        
-        
+    
         // Cek apakah ada data pada tanggal yang sama dengan id_user dan tipe_harga yang ditentukan
         $existingEntry = DB::table('harga_produk')
             ->where('id_user', $id_user)
@@ -522,8 +522,9 @@ class DataLaporanProdukController extends Controller
         
         if ($existingEntry) {
             return redirect()->back()
-            ->withErrors(['tgl_entry' => 'Data untuk tanggal ini sudah ada. Silakan pilih tanggal lain.'], $tipeHarga)
-            ->withInput();
+                ->withErrors(['tgl_entry' => 'Data untuk tanggal ini sudah ada. Silakan pilih tanggal lain.'], $tipeHarga)
+                ->with('error', 'Data gagal disimpan!')
+                ->withInput();
         }
     
         // Menyimpan data ke tabel harga_produk jika tidak ada duplikasi
@@ -544,7 +545,8 @@ class DataLaporanProdukController extends Controller
         }
     
         return redirect()->back()->with('success', 'Data berhasil disimpan!');
-    }   
+    }
+       
 
     public function store(Request $request)
     {
@@ -567,6 +569,7 @@ class DataLaporanProdukController extends Controller
         if (!in_array($tglEntry->format('l'), ['Monday', 'Thursday'])) {
             return redirect()->back()
                 ->withErrors(['tgl_entry' => 'Tanggal harus merupakan hari Senin atau Kamis.'], $tipeHarga)
+                ->with('error', 'Data gagal disimpan!')
                 ->withInput();
         }
     
@@ -580,6 +583,7 @@ class DataLaporanProdukController extends Controller
         if ($existingData) {
             return redirect()->back()
                 ->withErrors(['tgl_entry' => 'Data untuk tanggal ini sudah ada. Silakan pilih tanggal lain.'], $tipeHarga)
+                ->with('error', 'Data gagal disimpan!')
                 ->withInput();
         }
     
